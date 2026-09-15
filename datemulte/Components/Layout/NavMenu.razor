@@ -1,0 +1,35 @@
+<MudDrawer Open="@DrawerOpen" OpenChanged="@((bool open) => DrawerOpenChanged.InvokeAsync(open))" Elevation="2" Variant="DrawerVariant.Persistent" ClipMode="DrawerClipMode.Always">
+    <MudDrawerHeader Style="background: linear-gradient(135deg, #20818e 0%, #06b6d4 100%);">
+        <MudText Typo="Typo.h6" Style="color: white; font-weight: 700;">
+            <MudIcon Icon="@Icons.Material.Filled.BarChart" Style="vertical-align: middle; margin-right: 8px;" />
+            CSV Plotter
+        </MudText>
+    </MudDrawerHeader>
+    <MudNavMenu>
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+            Home
+        </MudNavLink>
+        <MudNavLink Href="/csv-plotter" Icon="@Icons.Material.Filled.ShowChart">
+            CSV Plotter
+        </MudNavLink>
+        <MudNavLink Href="/data-view" Icon="@Icons.Material.Filled.TableChart">
+            Data View
+        </MudNavLink>
+        <MudNavLink Href="/about" Icon="@Icons.Material.Filled.Info">
+            About
+        </MudNavLink>
+        <MudNavLink Href="/settings" Icon="@Icons.Material.Filled.Settings">
+            Settings
+        </MudNavLink>
+        <MudNavLink Href="/api-management" Icon="@Icons.Material.Filled.Key">API Management</MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+    [Parameter]
+    public bool DrawerOpen { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<bool> DrawerOpenChanged { get; set; }
+}
+

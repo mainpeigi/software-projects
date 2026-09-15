@@ -1,0 +1,117 @@
+@using Datemulte_2.Services
+@using Datemulte_2.Models
+@using Datemulte_2.Components.Dialogs
+@using MudBlazor
+@inject SessionSharingService SharingService
+@inject CommentService CommentService
+@inject IDialogService DialogService
+
+<MudToolBar Dense="true" Class="mb-2">
+    <MudTooltip Text="Active Collaborators">
+        <MudAvatarGroup Max="5" Spacing="1">
+            @foreach (var collaborator in collaborators)
+            {
+                <MudAvatar Color="Color.Primary" Size="Size.Small">
+                    @GetInitials(collaborator.SharedWithUserId.ToString())
+                </MudAvatar>
+            }
+        </MudAvatarGroup>
+    </MudTooltip>
+
+    <MudSpacer />
+
+    <MudBadge Content="@commentCount" Overlap="true" Color="Color.Info" Visible="@(commentCount > 0)">
+        <MudIconButton Icon="@Icons.Material.Filled.Comment"
+                       Color="Color.Default"
+                       OnClick="ToggleCommentsPanel"/>
+    </MudBadge>
+
+    <MudIconButton Icon="@Icons.Material.Filled.Share"
+                   Color="Color.Default"
+                   OnClick="OpenShareDialog"/>
+
+    <MudIconButton Icon="@Icons.Material.Filled.History"
+                   Color="Color.Default"
+                   OnClick="OpenAuditLog"/>
+</MudToolBar>
+
+@code {
+    [Parameter] public Guid SessionId { get; set; }
+    [Parameter] public Guid OwnerId { get; set; }
+    [Parameter] public EventCallback OnToggleComments { get; set; }
+
+    private List<SessionShare> collaborators = new();
+    private int commentCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCollaborators();
+        await LoadCommentCount();
+    }
+
+    private async Task LoadCollaborators()
+    {
+        collaborators = await SharingService.GetSessionSharesAsync(SessionId, OwnerId);
+    }
+
+    private async Task LoadCommentCount()
+    {
+        commentCount = await CommentService.GetCommentCountAsync(SessionId);
+    }
+
+    private async Task OpenShareDialog()
+    {
+        var parameters = new DialogParameters
+        {
+            { "SessionId", SessionId },
+            { "OwnerId", OwnerId }
+        };
+
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<ShareSessionDialog>("Share Session", parameters, options);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled)
+        {
+            await LoadCollaborators();
+        }
+    }
+
+    private async Task OpenAuditLog()
+    {
+        var parameters = new DialogParameters
+        {
+            { "SessionId", SessionId }
+        };
+
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.Medium,
+            FullWidth = true
+        };
+
+        await DialogService.ShowAsync<AuditLogDialog>("Activity Log", parameters, options);
+    }
+
+    private async Task ToggleCommentsPanel()
+    {
+        await OnToggleComments.InvokeAsync();
+    }
+
+    private string GetInitials(string userId)
+    {
+        return userId.Substring(0, Math.Min(2, userId.Length)).ToUpper();
+    }
+
+    public async Task RefreshAsync()
+    {
+        await LoadCollaborators();
+        await LoadCommentCount();
+        StateHasChanged();
+    }
+}

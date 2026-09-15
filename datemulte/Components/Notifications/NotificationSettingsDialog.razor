@@ -1,0 +1,68 @@
+@using Datemulte_2.Services
+@using Datemulte_2.Models
+@using MudBlazor
+@inject UserProfileService UserProfileService
+@inject LocalProfileService AuthService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <MudText Typo="Typo.h6" Class="mb-4">Notification Settings</MudText>
+
+        <MudText Typo="Typo.subtitle2" Class="mb-2">Email Notifications</MudText>
+        <MudSwitch @bind-Value="emailNotifications" Color="Color.Primary" Label="Receive email notifications" />
+
+        <MudDivider Class="my-4" />
+
+        <MudText Typo="Typo.subtitle2" Class="mb-2">Notification Types</MudText>
+
+        <MudSwitch @bind-Value="notifySessionShared" Color="Color.Primary" Label="Session shared with me" Class="mb-2" />
+        <MudSwitch @bind-Value="notifyComments" Color="Color.Primary" Label="New comments" Class="mb-2" />
+        <MudSwitch @bind-Value="notifyDataChanged" Color="Color.Primary" Label="Data Changes" Class="mb-2" />
+        <MudSwitch @bind-Value="notifyReports" Color="Color.Primary" Label="Reports Ready" Class="mb-2" />
+        <MudSwitch @bind-Value="notifyPermissions" Color="Color.Primary" Label="Permissions Changed" Class="mb-2" />
+        <MudSwitch @bind-Value="notifySystemAlerts" Color="Color.Primary" Label="System Alerts" Class="mb-2" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@(() => Dialog?.Close())">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SaveSettings">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code{
+    [CascadingParameter]
+    public MudBlazor.IDialogReference? Dialog { get; set; }
+
+    private bool emailNotifications = true;
+    private bool notifySessionShared = true;
+    private bool notifyComments = true;
+    private bool notifyDataChanged = true;
+    private bool notifyReports = true;
+    private bool notifyPermissions = true;
+    private bool notifySystemAlerts = true;
+
+    private Guid currentUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthService.CurrentUserId ?? Guid.Empty;
+        await LoadSettings();
+    }
+
+    private async Task LoadSettings()
+    {
+        var profile = await UserProfileService.GetProfileAsync(currentUserId);
+        if (profile != null)
+        {
+            emailNotifications = profile.EmailNotifications;
+        }
+    }
+
+    private async Task SaveSettings()
+    {
+        await UserProfileService.UpdateNotificationPreferencesAsync(currentUserId, emailNotifications);
+
+        Snackbar.Add("Notification settings saved", Severity.Success);
+        Dialog?.Close(DialogResult.Ok(true));
+    }
+}

@@ -1,0 +1,122 @@
+{
+  "origin": "carousel-main",
+  "files": [
+    {
+      "source": "carousel-web/src/lib/acoustics.ts",
+      "file": "src/lib/acoustics.ts",
+      "sha256": "c1e901c017aa9c03845adfaa259d1a45c1b8ff78848e2c2be322620d1c8a960f"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-features.ts",
+      "file": "src/lib/acoustic-features.ts",
+      "sha256": "3c623fea3d4435e636c87490d5696f4cc2e2116ba6824205c47e41d6cabd65ee"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-features.test.ts",
+      "file": "src/lib/acoustic-features.test.ts",
+      "sha256": "ec1fbc1b20003555c6d6f3ad65b7a4c91321e1c3e8598ea931671346a93f984e"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-background.ts",
+      "file": "src/lib/acoustic-background.ts",
+      "sha256": "db550ca15734572dd42e8b262aa25876e463502efb0fe645aa5703f21851b794"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-background.test.ts",
+      "file": "src/lib/acoustic-background.test.ts",
+      "sha256": "e119bd7a72e1c9901cf18b23ca96d096118f6d31cee5f567c4d435da64beb816"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-matching.ts",
+      "file": "src/lib/acoustic-matching.ts",
+      "sha256": "8f16364605ffd4898fa1c994806e156a5a05b75cd723040a9453f9f8479fa3ac"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-matching.test.ts",
+      "file": "src/lib/acoustic-matching.test.ts",
+      "sha256": "b857edcf048b08e6b5c59e3a8e7e81135c61e469e8bf01c927b83df277cc9b3c"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-detector.ts",
+      "file": "src/lib/acoustic-detector.ts",
+      "sha256": "ad6fd4855f5f8734f4549f920350c51d41c529374cf6989646ed3fa56e2c39fd"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-detector.test.ts",
+      "file": "src/lib/acoustic-detector.test.ts",
+      "sha256": "e8cadd1202a529ff7fa60e58582387174e16331c85890082616fa341acf1f7b8"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-match-gate.ts",
+      "file": "src/lib/acoustic-match-gate.ts",
+      "sha256": "65b5a909cfef44b8d4e447262a28df797bce1d05ff6ab4bb2a6681d996e51064"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-match-gate.test.ts",
+      "file": "src/lib/acoustic-match-gate.test.ts",
+      "sha256": "daa7e5ad9827a969181822489c1f4f4657839fe5097a22265eb90c751d50b5fa"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-references.ts",
+      "file": "src/lib/acoustic-references.ts",
+      "sha256": "525c2c0f5abbdf4cd9ea6119c4df9b2f97a4252f2f3b73fd1c87823844c7ef18"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-references.test.ts",
+      "file": "src/lib/acoustic-references.test.ts",
+      "sha256": "d6c1486a550a966231047383e524b5bac2469978b2cb5df7f061db0b953e2b34"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-calibration.ts",
+      "file": "src/lib/acoustic-calibration.ts",
+      "sha256": "c7026c86a101aa32f447bfc7cda6590b78dcee599827d33bb5c8eee1c2f9f0a5"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-calibration.test.ts",
+      "file": "src/lib/acoustic-calibration.test.ts",
+      "sha256": "117f4223663f3eac1b33071453e0e52fbbbae7ba2907d72d4e1b4ac642d7d8ce"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-evaluation.ts",
+      "file": "src/lib/acoustic-evaluation.ts",
+      "sha256": "335f968aa382ec490cdcaf1a0a9244c16f48fb29915e7c9abdf7f7801a6790cd"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-evaluation.test.ts",
+      "file": "src/lib/acoustic-evaluation.test.ts",
+      "sha256": "0b8c0c142b4c01694ed2fe1c36927f05a78686e9822b0c9c075cbcad19bb6c09"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-recording-analysis.ts",
+      "file": "src/lib/acoustic-recording-analysis.ts",
+      "sha256": "eca8f082534758196612774145395d525a2b0f6533b284c5f62d9f5b2fc681fc"
+    },
+    {
+      "source": "carousel-web/src/lib/acoustic-recording-analysis.test.ts",
+      "file": "src/lib/acoustic-recording-analysis.test.ts",
+      "sha256": "ab51644ff3c1095eeccc0ea4585a3d077df726be63829c49694d84f89204eb0c"
+    },
+    {
+      "source": "carousel-web/src/lib/wav.ts",
+      "file": "src/lib/wav.ts",
+      "sha256": "976c1f5d0dc56698095e1666c700f781514bd2951d453d9c770f3878bd72456e"
+    },
+    {
+      "source": "carousel-web/src/lib/wav.test.ts",
+      "file": "src/lib/wav.test.ts",
+      "sha256": "13dbc159e8265297145b3fdc6a1330e62ae49bcab3dc72b6c0b62a4dc7739923"
+    },
+    {
+      "source": "carousel-web/src/test/acoustic-fixtures.ts",
+      "file": "src/test/acoustic-fixtures.ts",
+      "sha256": "3ec9be9cf7af71703879b8399fcac2f43bb85418430bf5f3f306ddd040ea57c9"
+    },
+    {
+      "source": "carousel-web/src/test/synthetic-audio.ts",
+      "file": "src/test/synthetic-audio.ts",
+      "sha256": "e3642b5873c990b6e577d24299da76470b6d291ea2eaf6080004745ae4eaea22"
+    }
+  ],
+  "sourceCommit": "a66549c00bff2875effd9b132c2be1116ef000c9",
+  "note": "Consistent source snapshot from the initial extraction, before concurrent working-tree edits in Carousel. Original algorithm files are unchanged."
+}

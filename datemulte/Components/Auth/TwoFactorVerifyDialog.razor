@@ -1,0 +1,78 @@
+@inject TwoFactorService TwoFactorService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Security" Class="mr-2" />
+            Two-Factor Authentication
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Class="mb-3">Enter the 6-digit code from your authenticator app:</MudText>
+        <MudTextField @bind-Value="verificationCode" 
+                      Label="6-digit code" 
+                      Variant="Variant.Outlined" 
+                      MaxLength="6"
+                      Immediate="true"
+                      OnKeyDown="HandleKeyDown"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Pin" />
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-3">@errorMessage</MudAlert>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" 
+                   Variant="Variant.Filled" 
+                   OnClick="Verify" 
+                   Disabled="@(verificationCode?.Length != 6 || isVerifying)">
+            @if (isVerifying)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+            }
+            Verify
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
+    [Parameter] public string Secret { get; set; } = "";
+
+    private string verificationCode = "";
+    private string? errorMessage;
+    private bool isVerifying;
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && verificationCode?.Length == 6)
+        {
+            await Verify();
+        }
+    }
+
+    private Task Verify()
+    {
+        isVerifying = true;
+        errorMessage = null;
+
+        if (TwoFactorService.ValidateCode(Secret, verificationCode))
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            errorMessage = "Invalid code. Please try again.";
+            verificationCode = "";
+        }
+
+        isVerifying = false;
+        return Task.CompletedTask;
+    }
+}
+

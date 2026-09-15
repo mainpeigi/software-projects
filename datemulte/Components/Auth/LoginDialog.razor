@@ -1,0 +1,117 @@
+@inject LocalProfileService AuthService
+@inject UserProfileService ProfileService
+@inject TwoFactorService TwoFactorService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            @(isRegisterMode ? "Create Account" : "Sign In")
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="email" Label="Email" Variant="Variant.Outlined" InputType="InputType.Email" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Email" Class="mb-3" autocomplete="email" />
+        <MudTextField @bind-Value="password" Label="Password" Variant="Variant.Outlined" InputType="@(showPassword ? InputType.Text : InputType.Password)" Adornment="Adornment.End" AdornmentIcon="@(showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)" OnAdornmentClick="() => showPassword = !showPassword" Class="mb-3"/>
+
+        @if(isRegisterMode)
+        {
+            <MudTextField @bind-Value="confirmPassword" Label="Confirm Password" Variant="Variant.Outlined" InputType="@(showConfirmPassword ? InputType.Text : InputType.Password)" Adornment="Adornment.End" AdornmentIcon="@(showConfirmPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)" OnAdornmentClick="() => showConfirmPassword = !showConfirmPassword" Class="mb-3"/>
+        }
+
+        @if(!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-3">@errorMessage</MudAlert>
+        }
+
+        <MudLink OnClick="@(() => isRegisterMode = !isRegisterMode)" Style="cursor: pointer;">
+            @(isRegisterMode ? "Already have an account? Sign in" : "Don't have an account? Register")
+        </MudLink>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit" Disabled="@isLoading">
+            @if(isLoading)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2"/>
+            }
+            @(isRegisterMode ? "Register" : "Sign In")
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
+    private string email = "";
+    private string password = "";
+    private string confirmPassword = "";
+    private string? errorMessage;
+    private bool isLoading;
+    private bool isRegisterMode;
+    private bool showPassword;
+    private bool showConfirmPassword;
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Submit()
+    {
+        if(string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please enter email and password";
+            return;
+        }
+
+        if(isRegisterMode && password != confirmPassword)
+        {
+            errorMessage = "Passwords do not match";
+            return;
+        }
+
+        if(isRegisterMode && password.Length < 6)
+        {
+            errorMessage = "Password must be at least 6 characters";
+            return;
+        }
+
+        isLoading = true;
+        errorMessage = null;
+
+        var (success, error) = isRegisterMode ? await AuthService.SignUpAsync(email, password) : await AuthService.SignInAsync(email, password);
+
+        if(success)
+        {
+            if (!isRegisterMode && AuthService.CurrentUserId.HasValue)
+            {
+                var profile = await ProfileService.GetProfileAsync(AuthService.CurrentUserId.Value);
+                if (profile?.TwoFactorEnabled == true && !string.IsNullOrEmpty(profile.TwoFactorSecret))
+                {
+                    var parameters = new DialogParameters
+                    {
+                        ["Secret"] = profile.TwoFactorSecret
+                    };
+
+                    var verifyDialog = await DialogService.ShowAsync<TwoFactorVerifyDialog>("2FA Verification", parameters);
+                    var verifyResult = await verifyDialog.Result;
+
+                    if (verifyResult.Canceled)
+                    {
+                        await AuthService.SignOutAsync();
+                        errorMessage = "2FA verification cancelled";
+                        isLoading = false;
+                        return;
+                    }
+                }
+            }
+
+            Snackbar.Add(isRegisterMode ? "Account created!" : "Signed in!", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            errorMessage = error;
+        }
+
+        isLoading = false;
+    }
+}

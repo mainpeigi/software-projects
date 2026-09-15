@@ -1,0 +1,157 @@
+@page "/about"
+
+<PageTitle>About - Data Plotter</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
+    <MudAlert Severity="Severity.Info" Class="mb-4">Local edition: sessions are saved on this laptop. Online accounts, shared sessions, webhooks and scheduled email reports are unavailable.</MudAlert>
+    <MudPaper Elevation="3" Class="pa-6" Style="background-color: #1e293b;">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <MudIcon Icon="@Icons.Material.Filled.Info" Style="font-size: 64px; color: #20818e;" />
+            <MudText Typo="Typo.h3" Style="font-weight: 700; color: #20818e; margin-top: 1rem;">
+                About Data Plotter
+            </MudText>
+            <MudText Typo="Typo.h6" Style="color: #cbd5e1; margin-top: 0.5rem;">
+                Version 1.0.0
+            </MudText>
+        </div>
+
+        <MudDivider Class="my-4" />
+
+        <!-- Description -->
+        <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e; font-weight: 600;">
+            Overview
+        </MudText>
+        <MudText Typo="Typo.body1" Class="mb-4" Style="line-height: 1.8;">
+            Data Plotter is a powerful, interactive web application designed to visualize and analyze data with ease.
+            Built with modern web technologies, it provides a seamless experience for exploring time-series data,
+            performing calculations, and creating custom visualizations.
+        </MudText>
+
+        <MudDivider Class="my-4" />
+
+        <!-- Features -->
+        <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e; font-weight: 600;">
+            Key Features
+        </MudText>
+        <MudList T="string" Dense="true">
+            <MudListItem T="string" Icon="@Icons.Material.Filled.UploadFile" IconColor="Color.Primary">
+                <MudText><strong>Dynamic File Loading:</strong> Upload and parse files with automatic column detection</MudText>
+            </MudListItem>
+            <MudListItem T="string" Icon="@Icons.Material.Filled.Speed" IconColor="Color.Primary">
+                <MudText><strong>Smart Sampling:</strong> Handle large datasets efficiently with configurable sampling levels</MudText>
+            </MudListItem>
+            <MudListItem T="string" Icon="@Icons.Material.Filled.Calculate" IconColor="Color.Primary">
+                <MudText><strong>Calculated Columns:</strong> Create new data columns using mathematical operations (+, -, *, /, %)</MudText>
+            </MudListItem>
+            <MudListItem T="string" Icon="@Icons.Material.Filled.Timeline" IconColor="Color.Primary">
+                <MudText><strong>Dual Y-Axis Support:</strong> Plot multiple data series with independent Y-axes</MudText>
+            </MudListItem>
+            <MudListItem T="string" Icon="@Icons.Material.Filled.ViewQuilt" IconColor="Color.Primary">
+                <MudText><strong>Multi-Chart Layouts:</strong> Split views horizontally or vertically with up to 8 charts (3 split levels)</MudText>
+            </MudListItem>
+            <MudListItem T="string" Icon="@Icons.Material.Filled.ZoomIn" IconColor="Color.Primary">
+                <MudText><strong>Interactive Charts:</strong> Zoom, pan, and explore data with ECharts integration</MudText>
+            </MudListItem>
+            <MudListItem T="string" Icon="@Icons.Material.Filled.SaveAlt" IconColor="Color.Primary">
+                <MudText><strong>Export Capabilities:</strong> Save charts as images for reports and presentations</MudText>
+            </MudListItem>
+        </MudList>
+
+        <MudDivider Class="my-4" />
+
+        <!-- Technology Stack -->
+        <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e; font-weight: 600;">
+            Technology Stack
+        </MudText>
+        <MudGrid>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="2" Class="pa-4" Style="text-align: center; height: 100%; background-color: #1e293b;">
+                    <MudIcon Icon="@Icons.Material.Filled.Code" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">Blazor Server</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #cbd5e1;">.NET 9.0</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="2" Class="pa-4" Style="text-align: center; height: 100%; background-color: #1e293b;">
+                    <MudIcon Icon="@Icons.Material.Filled.Palette" Color="Color.Secondary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">MudBlazor</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #cbd5e1;">Material Design UI</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="2" Class="pa-4" Style="text-align: center; height: 100%; background-color: #1e293b;">
+                    <MudIcon Icon="@Icons.Material.Filled.ShowChart" Color="Color.Tertiary" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">ECharts</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #cbd5e1;">Interactive Charting</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="2" Class="pa-4" Style="text-align: center; height: 100%; background-color: #1e293b;">
+                    <MudIcon Icon="@Icons.Material.Filled.TableChart" Color="Color.Success" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">Helper</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #cbd5e1;">Parsing</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="2" Class="pa-4" Style="text-align: center; height: 100%; background-color: #1e293b;">
+                    <MudIcon Icon="@Icons.Material.Filled.Javascript" Color="Color.Warning" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">JavaScript</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #cbd5e1;">Chart Interop</MudText>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6" md="4">
+                <MudPaper Elevation="2" Class="pa-4" Style="text-align: center; height: 100%; background-color: #1e293b;">
+                    <MudIcon Icon="@Icons.Material.Filled.Storage" Color="Color.Info" Size="Size.Large" />
+                    <MudText Typo="Typo.h6" Class="mt-2">SQLite</MudText>
+                    <MudText Typo="Typo.body2" Style="color: #cbd5e1;">Local file storage</MudText>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+
+        <MudDivider Class="my-4" />
+
+        <!-- Usage Guide -->
+        <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e; font-weight: 600;">
+            Quick Start Guide
+        </MudText>
+        <MudTimeline TimelineOrientation="TimelineOrientation.Vertical" TimelinePosition="TimelinePosition.Start">
+            <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                <MudText Typo="Typo.h6">1. Upload a File</MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">Click the upload area and select your file containing time-series data</MudText>
+            </MudTimelineItem>
+            <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                <MudText Typo="Typo.h6">2. Load and Parse</MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">Click "Load File" to parse the file and detect numeric columns automatically</MudText>
+            </MudTimelineItem>
+            <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                <MudText Typo="Typo.h6">3. Select Data Columns</MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">Choose which columns to visualize on the primary or secondary Y-axis</MudText>
+            </MudTimelineItem>
+            <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                <MudText Typo="Typo.h6">4. Customize Layout</MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">Select single, horizontal, or vertical split layouts with multiple levels</MudText>
+            </MudTimelineItem>
+            <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                <MudText Typo="Typo.h6">5. Create Calculations</MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">Use the Calculations panel to create derived columns with mathematical operations</MudText>
+            </MudTimelineItem>
+            <MudTimelineItem Color="Color.Success" Size="Size.Small">
+                <MudText Typo="Typo.h6">6. Analyze & Export</MudText>
+                <MudText Typo="Typo.body2" Class="mt-1">Interact with charts, zoom into details, and export visualizations</MudText>
+            </MudTimelineItem>
+        </MudTimeline>
+
+        <MudDivider Class="my-4" />
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <MudText Typo="Typo.body2" Style="color: #cbd5e1;">
+                Built using Blazor Server and MudBlazor
+            </MudText>
+            <MudText Typo="Typo.caption" Style="color: #94a3b8;" Class="mt-2">
+                © 2025 Data Plotter. All rights reserved.
+            </MudText>
+        </div>
+    </MudPaper>
+</MudContainer>

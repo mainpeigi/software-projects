@@ -1,0 +1,174 @@
+@using Datemulte_2.Services
+@using Datemulte_2.Models
+@using MudBlazor
+@inject NotificationService NotificationService
+@inject LocalProfileService AuthService
+@implements IDisposable
+
+<MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+    <ActivatorContent>
+        <MudBadge Content="@unreadCount" Overlap="true" Color="Color.Error" Visible="@(unreadCount > 0)">
+            <MudIconButton Icon="@Icons.Material.Filled.Notifications" Color="Color.Inherit"/>
+        </MudBadge>
+    </ActivatorContent>
+    <ChildContent>
+        <MudPaper Width="400px" MaxHeight="500px" Style="overflow-y: auto;">
+            <div class="d-flex justify-space-between align-center pa-3 pb-2">
+                <MudText Typo="Typo.h6">Notifications</MudText>
+                @if (unreadCount > 0)
+                {
+                    <MudButton Size="Size.Small" OnClick="MarkAllAsRead" Color="Color.Primary">
+                        Mark All Read
+                    </MudButton>
+                }
+            </div>
+
+            <MudDivider />
+
+            @if (notifications.Any())
+            {
+                <MudList T="string" Dense="true">
+                    @foreach (var notification in notifications)
+                    {
+                        <MudListItem T="string"
+                                     OnClick="@(() => HandleNotificationClick(notification))"
+                                     Style="@GetNotificationStyle(notification)">
+                            <div class="d-flex align-start pa-2">
+                                <MudIcon Icon="@GetNotificationIcon(notification.Type)"
+                                         Color="@GetNotificationColor(notification.Type)"
+                                         Class="mr-3"/>
+                                <div style="flex: 1;">
+                                    <MudText Typo="Typo.body2" Style="@GetNotificationTextStyle(notification)">
+                                        @notification.Title
+                                    </MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        @notification.Message
+                                    </MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        @GetTimeAgo(notification.CreatedAt)
+                                    </MudText>
+                                </div>
+                            </div>
+                        </MudListItem>
+                        <MudDivider />
+                    }
+                </MudList>
+            }
+            else
+            {
+                <div class="pa-4 text-center">
+                    <MudText Color="Color.Secondary">No notifications</MudText>
+                </div>
+            }
+        </MudPaper>
+    </ChildContent>
+</MudMenu>
+
+@code {
+    private List<Notification> notifications = new();
+    private int unreadCount = 0;
+    private Guid currentUserId;
+    private System.Threading.Timer? refreshTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthService.CurrentUserId ?? Guid.Empty;
+        
+        if (currentUserId != Guid.Empty)
+        {
+            await LoadNotifications();
+            
+            // Refresh notifications every 30 seconds
+            refreshTimer = new System.Threading.Timer(async _ =>
+            {
+                await InvokeAsync(async () =>
+                {
+                    await LoadNotifications();
+                    StateHasChanged();
+                });
+            }, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+        }
+    }
+
+    private async Task LoadNotifications()
+    {
+        notifications = await NotificationService.GetUserNotificationsAsync(currentUserId, true);
+        unreadCount = notifications.Count(n => !n.IsRead);
+    }
+
+    private async Task HandleNotificationClick(Notification notification)
+    {
+        if (!notification.IsRead)
+        {
+            await NotificationService.MarkAsReadAsync(notification.Id, currentUserId);
+            await LoadNotifications();
+        }
+    }
+
+    private async Task MarkAllAsRead()
+    {
+        await NotificationService.MarkAllAsReadAsync(currentUserId);
+        await LoadNotifications();
+    }
+
+    private string GetNotificationIcon(NotificationType type)
+    {
+        return type switch
+        {
+            NotificationType.SessionShared => Icons.Material.Filled.Share,
+            NotificationType.CommentAdded => Icons.Material.Filled.Comment,
+            NotificationType.DataChanged => Icons.Material.Filled.Edit,
+            NotificationType.SystemAlert => Icons.Material.Filled.Warning,
+            NotificationType.ReportReady => Icons.Material.Filled.Assessment,
+            NotificationType.PermissionChanged => Icons.Material.Filled.Security,
+            NotificationType.SessionDeleted => Icons.Material.Filled.Delete,
+            _ => Icons.Material.Filled.Notifications
+        };
+    }
+
+    private Color GetNotificationColor(NotificationType type)
+    {
+        return type switch
+        {
+            NotificationType.SessionShared => Color.Success,
+            NotificationType.CommentAdded => Color.Info,
+            NotificationType.DataChanged => Color.Primary,
+            NotificationType.SystemAlert => Color.Warning,
+            NotificationType.ReportReady => Color.Success,
+            NotificationType.PermissionChanged => Color.Secondary,
+            NotificationType.SessionDeleted => Color.Error,
+            _ => Color.Default
+        };
+    }
+
+    private string GetNotificationStyle(Notification notification)
+    {
+        return notification.IsRead ? "" : "background-color: rgba(33, 150, 243, 0.08);";
+    }
+
+    private string GetNotificationTextStyle(Notification notification)
+    {
+        return notification.IsRead ? "" : "font-weight: 600;";
+    }
+
+    private string GetTimeAgo(DateTime timestamp)
+    {
+        var timeSpan = DateTime.UtcNow - timestamp;
+
+        if (timeSpan.TotalMinutes < 1)
+            return "Just now";
+        if (timeSpan.TotalMinutes < 60)
+            return $"{(int)timeSpan.TotalMinutes}m ago";
+        if (timeSpan.TotalHours < 24)
+            return $"{(int)timeSpan.TotalHours}h ago";
+        if (timeSpan.TotalDays < 7)
+            return $"{(int)timeSpan.TotalDays}d ago";
+        
+        return timestamp.ToLocalTime().ToString("MMM d");
+    }
+
+    public void Dispose()
+    {
+        refreshTimer?.Dispose();
+    }
+}

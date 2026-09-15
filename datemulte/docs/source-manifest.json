@@ -1,0 +1,618 @@
+{
+  "sourceCommit": "ffae00b40ae042a0f92df4f2c8382fc980355eb0",
+  "description": "Hashes of selected original files before portable adaptation.",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "fb611466bab475426ca3b230eeec6362793d9bcb657fe71da670e94fdf3140e1"
+    },
+    {
+      "path": "Components/Api/ApiKeysManager.razor",
+      "sha256": "b73829a268f57c3c60e2d3e82978150e7db80d1d86ea2fcdbfd7f2088e19609a"
+    },
+    {
+      "path": "Components/Api/WebhookManager.razor",
+      "sha256": "29c5ed24aaeb56c93dd9b9613c97d757fc6910d77c3de9a5a6aac413693f112a"
+    },
+    {
+      "path": "Components/App.razor",
+      "sha256": "eeedbe3f739747ff285172b0df1e02845004a733c29c0da89bcb7c53ff85259c"
+    },
+    {
+      "path": "Components/Auth/DeleteAccountDialog.razor",
+      "sha256": "975fa7c0ff7682fdcce0f0b516d34867c7544ae0d66ec06b9abd0a17c7e8b102"
+    },
+    {
+      "path": "Components/Auth/LoginDialog.razor",
+      "sha256": "b28fbe27faaa95b5db8cf1cc15c1515baac839827f755110f4824662c8618cdb"
+    },
+    {
+      "path": "Components/Auth/TwoFactorSetupDialog.razor",
+      "sha256": "d84bd86a1cee5a00234a46e5aeecbba8d5633fb0fe3f3d3d69385aff6b8dad38"
+    },
+    {
+      "path": "Components/Auth/TwoFactorVerifyDialog.razor",
+      "sha256": "01a0ff5b749c77f005c1f199a423cd664c3628f17d1ce5b2bfa81c7c90912c34"
+    },
+    {
+      "path": "Components/Collaboration/CollaborationToolbar.razor",
+      "sha256": "03106a5ee2f129e01e8bc8a4e7c16360166339ef5732d1799e5152f871dfb246"
+    },
+    {
+      "path": "Components/Collaboration/CommentsPanel.razor",
+      "sha256": "a9a97e369c5470b2849d0883ee3e33506b398fdbb0de560b9d64cbabd87c95ea"
+    },
+    {
+      "path": "Components/Collaboration/EditableSessionCommentCard.razor",
+      "sha256": "048a7ad628041e0cc53a8e07bbd70f6c554ebcad9232858d74047561ef9a7160"
+    },
+    {
+      "path": "Components/Dialogs/AuditLogDialog.razor",
+      "sha256": "14aa6a875eaf5beda1c439c16aa820b8f943a034e9370dbc5045e1254509b86e"
+    },
+    {
+      "path": "Components/Dialogs/ShareSessionDialog.razor",
+      "sha256": "45281adba58668917dad4b648248dc1d384bf154b1a592d7e28310dffd90a9ba"
+    },
+    {
+      "path": "Components/Layout/MainLayout.razor",
+      "sha256": "df5e076b97c6f7b8fc0aed0e133f59712f656058f912a5666a64966833173fed"
+    },
+    {
+      "path": "Components/Layout/MainLayout.razor.css",
+      "sha256": "36cf337480e0579cf70b4765195eef361f52a9c5d44b66f8117d2351210e318a"
+    },
+    {
+      "path": "Components/Layout/NavMenu.razor",
+      "sha256": "5be5e4d0dd3f21ab360bee39ae549713f8c7726da036436b3a831c1b94ac07b3"
+    },
+    {
+      "path": "Components/Layout/NavMenu.razor.css",
+      "sha256": "a493035d026138e9b2a69a3e6d7bccf7c82672800c1340401c2ab0f6f6a6699e"
+    },
+    {
+      "path": "Components/Notifications/NotificationBell.razor",
+      "sha256": "501a67ab53c6a225a3923ec887d2f2c059a64f4c0059406e1ceb3bc35e58f632"
+    },
+    {
+      "path": "Components/Notifications/NotificationSettingsDialog.razor",
+      "sha256": "c03b49e2e3c7a12a022152938060486edd507eb287cff6ae0d1ce0abc8f2b618"
+    },
+    {
+      "path": "Components/Pages/About.razor",
+      "sha256": "d51a00344e74e37f933166c7026b31653c1d56b1f2a51fc2ff77e4a497a86a73"
+    },
+    {
+      "path": "Components/Pages/AcceptInvite.razor",
+      "sha256": "8400d207df3c718c0bb4248564b75e008ffce7b8ffaedcf5687e0e81d6da8e4c"
+    },
+    {
+      "path": "Components/Pages/ApiManagement.razor",
+      "sha256": "ebc96bf2d390020a2b9cb58acdd50c7c743adcc3e89a953362017611832cbb5b"
+    },
+    {
+      "path": "Components/Pages/ChartCustomizationPanel.razor",
+      "sha256": "b5cc524f5d101fe58c4b4a701a795360445e360c0a346a10b572ceb5c66b6905"
+    },
+    {
+      "path": "Components/Pages/CsvPlotter.razor",
+      "sha256": "0a8eb769bef133af0920b84df557a06e9a7098b5ba18d920c15e841fa227ca4f"
+    },
+    {
+      "path": "Components/Pages/DataView.razor",
+      "sha256": "af3ff6db38d3cbed8cf12dd55f6ca0c9eddf890759e0bb509267de8f6da93e00"
+    },
+    {
+      "path": "Components/Pages/Error.razor",
+      "sha256": "e77473780e53f2ba6d42105b745d3eca7cdbdaec1d407bc46a8ce9338b43eb29"
+    },
+    {
+      "path": "Components/Pages/Home.razor",
+      "sha256": "2741b8dbd3a16407592eb49a83da66fdfd51c4d08dbfef484042af9b6e04451f"
+    },
+    {
+      "path": "Components/Pages/Login.razor",
+      "sha256": "64e14164c343bf01483d7a6cbb2fbc53ed93b6cd55b5bf3f20f532d883a1e1e6"
+    },
+    {
+      "path": "Components/Pages/Profile.razor",
+      "sha256": "861b5bbf8c8d8e01667381e22332a01e9449c9060dc9a99b8f2d583694f6b3db"
+    },
+    {
+      "path": "Components/Pages/PurchaseDashboard.razor",
+      "sha256": "861c7ee8a38f9a7ed72a7d6c81ffa40801dbc56481e9f695ef20136057e56e5e"
+    },
+    {
+      "path": "Components/Pages/Settings.razor",
+      "sha256": "7b78720838cd7384ce4204ae0389914cc058ab2400ab365a44a942779673eec9"
+    },
+    {
+      "path": "Components/Pages/UnitOfMeasurementDialog.razor",
+      "sha256": "3cf85955bb113859a28b6701bac70811e6bc1367c75920a9e0beeb19684cebbf"
+    },
+    {
+      "path": "Components/Routes.razor",
+      "sha256": "b4a4d2fba33a5327e07a712d2e85edba8e5f4ef68b06f43d3d4a46a46f8dee4e"
+    },
+    {
+      "path": "Components/_Imports.razor",
+      "sha256": "54746d86a3a8aaf5533bc1d1e2fcabc79b71c7eb909e36a981b3dcc78e50851d"
+    },
+    {
+      "path": "Controllers/Api/DataApiController.cs",
+      "sha256": "309de5fc78d5f7b91594cb20f454e3ed6eea285d9046fe48310e2b9c51b1549b"
+    },
+    {
+      "path": "Controllers/Api/SessionApiController.cs",
+      "sha256": "6baf1401ded9468df2eb180398e236a0ab0e3bb6559513e90426ee890b87d7a6"
+    },
+    {
+      "path": "Data/DataManagementDbContext.cs",
+      "sha256": "f717d2b087eed7ef8c4b43f138e259f052d20d4266b40816d06ea6076c132d48"
+    },
+    {
+      "path": "Datemulte_2.csproj",
+      "sha256": "2605edd58ea8e5f4e20cee26e40ddb4db697cf7c688c082e6dc76451a7d30512"
+    },
+    {
+      "path": "Datemulte_2.sln",
+      "sha256": "70d18919dc8ebdd6d51c725ab412340e5f4da79bcbfdb1bbe0d65eeb02ac75b5"
+    },
+    {
+      "path": "Hubs/SessionHub.cs",
+      "sha256": "f1c31eb7b7805697315655558a9e8e947f751f52dfec49a16df2203bc4269a63"
+    },
+    {
+      "path": "Middleware/ApiKeyAuthenticationMiddleware.cs",
+      "sha256": "b621a3e680e71537be9bdff2099e97b9edf4399f57120ec4485e8b9c4cdb0cd0"
+    },
+    {
+      "path": "Middleware/ErrorHandlingMiddleware.cs",
+      "sha256": "3d64ae4d6763b29a447abcf362a5fa558d1b3a7ce9b517b6b420786d67588a9a"
+    },
+    {
+      "path": "Middleware/SecurityHeadersMiddleware.cs",
+      "sha256": "288bda7c4c91845b67f6219d1b51f144d5a9532e93e41c4a3b4eb8d35f5c7616"
+    },
+    {
+      "path": "Models/ApiKey.cs",
+      "sha256": "6bcc6c95fed13ac2177d62d9a46c3d8f4879ab98a10a26a1e200e26ab99dd678"
+    },
+    {
+      "path": "Models/AuditLog.cs",
+      "sha256": "ce392942bc657b7a14b64336a62c78b51ff5839b4e27acf557591b9ff4ef4216"
+    },
+    {
+      "path": "Models/CsvPlotterState.cs",
+      "sha256": "36e50000d44088c7c051256187eacd6389ac55138a8fff080c223b765c3cb7b8"
+    },
+    {
+      "path": "Models/DataManagement/DataChangeEvent.cs",
+      "sha256": "4389f2edfccab2dad4abd72e600c59504055e65366cba81482d765c0d5740f95"
+    },
+    {
+      "path": "Models/DataManagement/DataSession.cs",
+      "sha256": "3dfc229a9f0096d79650909419448ce084c06302bf1189a3982deeb7aca06c3f"
+    },
+    {
+      "path": "Models/DataManagement/DataSnapshot.cs",
+      "sha256": "2c7ae27082ee4e1d39d69aecd0a83ce6ea38afc93fc67d5a7a26995a08e5cd24"
+    },
+    {
+      "path": "Models/DataManagement/SessionInvitation.cs",
+      "sha256": "870d254c2bafdf8d3dfc0ba790ef86a5ad55b39a0c55f34625b8aaf2ebecc395"
+    },
+    {
+      "path": "Models/DataManagement/SessionUIState.cs",
+      "sha256": "3f0838a1aca887dbc5d864075f312caf39be0a553f91ba77db00b6cc5aaf76fb"
+    },
+    {
+      "path": "Models/DataManagement/SourceFile.cs",
+      "sha256": "6e9d530a5e1665afc84c86286d41ce55dc5aed2b65f44c9a20b8689d96b2e914"
+    },
+    {
+      "path": "Models/FileState.cs",
+      "sha256": "43d2bf40040efa9b24d681df93414faf5344a21f162f27917641cb0480b0c4ac"
+    },
+    {
+      "path": "Models/GenericCsvRow.cs",
+      "sha256": "ab8b99948002694735785936e83ab280cb55c1551d0b19f114481a157c3ada05"
+    },
+    {
+      "path": "Models/NotificationPreference.cs",
+      "sha256": "0dffda6baf8610cf5036ab36220029031629c0bd32304ab0fa73d06f3bc67b46"
+    },
+    {
+      "path": "Models/Notifications.cs",
+      "sha256": "7ba532f68a2f5ad7701feb3186981f5e339d95e77143af1f61657efba8d355e4"
+    },
+    {
+      "path": "Models/RecentFileInfo.cs",
+      "sha256": "b6edbe46ba65a82dc40adc4988145b2e202158a1ccd7b8de97c1d96a57e0ff4f"
+    },
+    {
+      "path": "Models/ScheduledReport.cs",
+      "sha256": "711eafd6e7e49030cfec78a5973e230c0e50f2636decac8135a38162003602c8"
+    },
+    {
+      "path": "Models/SensorData.cs",
+      "sha256": "97dd0f79c4bc986b63c5968834ff0db9c06b3c369b5f3acdecf1865ce9758a1e"
+    },
+    {
+      "path": "Models/SessionComment.cs",
+      "sha256": "32c378b50406579cd5e3104b69e8628471ce8c2de7e695552783fb3939209b7c"
+    },
+    {
+      "path": "Models/SessionShare.cs",
+      "sha256": "e008ec245a86ae21fa9ec7aae1b82f08673101dea5a0a009342c88356e7bbaee"
+    },
+    {
+      "path": "Models/SessionState.cs",
+      "sha256": "254ae9dc14f0690197f2cccfb78deaef4b4b010dc5d6a62bc4bbe5d76fc00611"
+    },
+    {
+      "path": "Models/ThemeConfiguration.cs",
+      "sha256": "f507e0c56f3a4577aa9fe9fc8e77cfa56e6280af524a33c38486ff5b2eafc1d6"
+    },
+    {
+      "path": "Models/UserPreferences.cs",
+      "sha256": "35ae4abf142814557e8f7e2fb644c6af2a7d69262b68511b12144c71537b777c"
+    },
+    {
+      "path": "Models/UserProfile.cs",
+      "sha256": "bc71b2ea691cfc707fc12bc2434c4e43d3c8b0b54ecb66adeccee9248c0be927"
+    },
+    {
+      "path": "Models/Webhook.cs",
+      "sha256": "0e4e45e9bd49183e609d4f340a2bef6a5d2c5ef313c9097860326dd8de092ab1"
+    },
+    {
+      "path": "Models/WebhookDelivery.cs",
+      "sha256": "83b63d8f99540bf2cbce9edf395689c6cf009b0ac82ccf5f6e72b44eb2ca06a2"
+    },
+    {
+      "path": "Models/ZeroValuesDetectionResult.cs",
+      "sha256": "ae5567fb53ca83c61ce6a6065f3be2b01ccc7556de8f20da5ddc2df0ef280a81"
+    },
+    {
+      "path": "Program.cs",
+      "sha256": "a26331226f0ddd868051176799ec56ce798b115ac7f26383057d011bcdc00f58"
+    },
+    {
+      "path": "README.md",
+      "sha256": "5bca8861391acfd5b1ba8c9f44054ad3e42f3fecd5dceeedb9de2009659f2c02"
+    },
+    {
+      "path": "Services/Analytics/ForecastingService.cs",
+      "sha256": "7bb1bcfb683f1b8e915675dcd7e10f56de971ec029348fbd11aa8a00a42e1d95"
+    },
+    {
+      "path": "Services/Analytics/ScheduledReportService.cs",
+      "sha256": "530503041a155fd25bf0cc796e093d3227c738ac5b8347a968e8525b27763f86"
+    },
+    {
+      "path": "Services/Analytics/StatisticalAnalysisService.cs",
+      "sha256": "4561f9dbff04e5760b1a3a83a5e8ef2f515a178623dae833677d8caa5ce6f626"
+    },
+    {
+      "path": "Services/Analytics/TrendAnalysisService.cs",
+      "sha256": "3446fc1b123f4ae5faf9fbffdbb31daaeee69993664ac499ab62e0ddc2d56e99"
+    },
+    {
+      "path": "Services/ApiKeyService.cs",
+      "sha256": "db77592d920d185e2845a5c2911d487b8f393c44ec30befb04dd6f61a89b92bc"
+    },
+    {
+      "path": "Services/AuditLog.cs",
+      "sha256": "af72873a19a66ac07e33ddc6946ba9de82c1bf6d6b7ebfed0f6af9a9d29b16b6"
+    },
+    {
+      "path": "Services/CommentService.cs",
+      "sha256": "cd7eecd5412d77a3f20da89e7e5de216ed5a71f5d6724eaceddab309a73dd7e8"
+    },
+    {
+      "path": "Services/CsvExportService.cs",
+      "sha256": "75b50f58c2918838ad5dd7ea9486d886ad6821232f244e22fc1bae2766d3f9f2"
+    },
+    {
+      "path": "Services/CsvPlotterStateService.cs",
+      "sha256": "e9bbdf760be370677aa7c1c6ee27d47ac8a25c6e5d121837e2413bb79eb2edc7"
+    },
+    {
+      "path": "Services/CsvServices.cs",
+      "sha256": "994c47729c60b08e1d3adfba6ed55a41a0b3da420497235e05974ec89efc955c"
+    },
+    {
+      "path": "Services/DataManagement/CompressionUtilities.cs",
+      "sha256": "b5a1989c21c79a5778283079003b26b258b8ce98989bd995fa19405e438884f6"
+    },
+    {
+      "path": "Services/DataManagement/DataSessionService.cs",
+      "sha256": "dfd83cece3afddfec057103d0209bf1622b0a1c9c4e021988b6840d87975f5bb"
+    },
+    {
+      "path": "Services/DataManagement/HybridStateManager.cs",
+      "sha256": "c88993148002b99aad7349d2e5ac7eadb591df747d62cf8800f0870c1866bfba"
+    },
+    {
+      "path": "Services/EmailService.cs",
+      "sha256": "f45b7fb2e683038d12afa6a078e931e84b570481a21270a9e56625c316923b5d"
+    },
+    {
+      "path": "Services/FileHistoryService.cs",
+      "sha256": "cc7e0d4dc08e43a11f9fb7f8705dd7ae9c94cbdf934dca19c73691ade71972dc"
+    },
+    {
+      "path": "Services/FormulaParser.cs",
+      "sha256": "d98d29e45ea054c87bd1c1214a12f645e06ddd7f9d233fbb5658ac1585212523"
+    },
+    {
+      "path": "Services/NotificationDispatcher.cs",
+      "sha256": "1b6c67db76aa5af68ef8ba6771597d10c055cc8ac9397d15081cbf2b1a2ac453"
+    },
+    {
+      "path": "Services/NotificationService.cs",
+      "sha256": "908608ac43408a272db082e5b76ccf76ced91e4034c1c0d40a7c16e83bfa9889"
+    },
+    {
+      "path": "Services/PermissionService.cs",
+      "sha256": "e4de0bb4f3a35044084b0ea3cbb015d444a96e728569dbf1b8bab0f1cfd5dfa5"
+    },
+    {
+      "path": "Services/PreferencesService.cs",
+      "sha256": "a96f0bf229c6f8e28de5d4cde4db46e1d76d82c3faeeab825053a35264aca562"
+    },
+    {
+      "path": "Services/Security/FileUploadValidator.cs",
+      "sha256": "587f47c7fd781aa4abd7624a6348fdc675993ae39cfd63548744b0a96299d188"
+    },
+    {
+      "path": "Services/Security/SecureFormulaEvaluator.cs",
+      "sha256": "eefc7a2d55769c6e58331c87f82e575f3ac213bc2969372f8ae6e44cbb388e73"
+    },
+    {
+      "path": "Services/SessionSharingService.cs",
+      "sha256": "261cd55a0c8dd0139a5d8cd9ce416847eb1349bec0617c43c524909ecd25cad7"
+    },
+    {
+      "path": "Services/SessionStorageService.cs",
+      "sha256": "b2db8762ff33843d211a81ddbe0db291dd75da13a773cead15f92bf31d7b4bf3"
+    },
+    {
+      "path": "Services/StatisticsService.cs",
+      "sha256": "657f90f820fcaf21e8b20d8c504e32ca34bae4accd7c195876b6862a732c1d44"
+    },
+    {
+      "path": "Services/SupabaseAuthService.cs",
+      "sha256": "30b11b2fec14f72ea09ceea0380048f77a0fc3cc3c86e903d4607bb3c49b91b7"
+    },
+    {
+      "path": "Services/ThemeService.cs",
+      "sha256": "28393ab95441b374cd44bdbc707c45050ad1521ca5f59caa1166b81f48e30550"
+    },
+    {
+      "path": "Services/TwoFactorService.cs",
+      "sha256": "fff5fc6d70188a8fa83df44560e0429fe7b19202849c3feab2e82645ff2f79f2"
+    },
+    {
+      "path": "Services/UserProfileService.cs",
+      "sha256": "4b992a75ef66c26c85762c76dbf07c7924d50a11eec84de289901cff7f414404"
+    },
+    {
+      "path": "Services/WebhookDeliveryService.cs",
+      "sha256": "7cb97c19f02d681d6a4cb90d217967d4ef27d5815dd424c7ee5bd80265392a3b"
+    },
+    {
+      "path": "Services/WebhookService.cs",
+      "sha256": "0ba5138cf1e2e1c89bf53cdf069fd087fad0de22cdbde7222346505eb3d429a3"
+    },
+    {
+      "path": "appsettings.json",
+      "sha256": "5836b105420d8b77b2c8b41ab7efd03621d25c16d02cc6e22dbc5e9572db9d7c"
+    },
+    {
+      "path": "wwwroot/app.css",
+      "sha256": "f2cee191a00788ba0dacf88f9d636a578c4c8dc806296653991946c66685fb32"
+    },
+    {
+      "path": "wwwroot/favicon.png",
+      "sha256": "e265ac0f2dda1e5dfa65b1adf330722bb3ef7789115283604d8cd19f098f1f08"
+    },
+    {
+      "path": "wwwroot/js/auth.js",
+      "sha256": "1ab151818c1c997c957e855af027583052f47d15f6061b2e0365213db40a890f"
+    },
+    {
+      "path": "wwwroot/js/echartsInterop.js",
+      "sha256": "0d24eae3643418625d744795bc92fec57e2949b53e34e3fa6818e845c79fb3ef"
+    },
+    {
+      "path": "wwwroot/js/fileDownload.js",
+      "sha256": "5b14d58164b0476af7728a7c84260602e9483932609c4ecc965f81484a3fd571"
+    },
+    {
+      "path": "wwwroot/js/indexedDb.js",
+      "sha256": "a71bd193d0aa735e7717709568b737cde8a0cdfafbe1445b8bee766c679dafc2"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css",
+      "sha256": "7f873c615d6aaebe914a255858c413ed1e56d8e913fa25e61391faf7fb91bc64"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.css.map",
+      "sha256": "c404fe9f6e4513986f3a38f67c6e1874ec2bd5b97822500904d83a3db84b4f61"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css",
+      "sha256": "84ddadb4c1bf2b7c10945acddd26d0d58178b48247084e2860ff9089b4f7bce6"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.min.css.map",
+      "sha256": "9202fec7056633c20eb35e659e81edf5d691d8b44c8811bf7188143dc290398e"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css",
+      "sha256": "335e5f1d329f30ae9c4daaece5cdbc3cd84dea10f4a9e51bdc73f339da0fc027"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.css.map",
+      "sha256": "fec890500f325fcdf48fe70be1a98a1d8df206d9f79fccf7120f95675e5ff749"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css",
+      "sha256": "fab186deeeb748c9072fcd066b8d8b01ac0f523ee2f2f691d8ab9e9ea96d6b61"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-grid.rtl.min.css.map",
+      "sha256": "ec674e970ed4ff083269e52d166c4fcf9fcca6176f5523ed54e3a54e7f5cdf74"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css",
+      "sha256": "ae3bacc424732a3ced09c7e039576e01cddedd9ecabe29891a890949e0033661"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.css.map",
+      "sha256": "45727f4198817c75e83ed5d1d84802f9b168da97b71ad6d93bbdb646d88b1b34"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css",
+      "sha256": "cbbd9b4f94ca98599fbf0ddb344ccf44d65affce7de71b6c79921c0545743dd3"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.min.css.map",
+      "sha256": "d1ea954fada4a912c987da13a8b7881f852742c92a56389bf219767d7c65e258"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css",
+      "sha256": "8112881d590182708f52cfe1999b17ca767d649a6fb04efb89db658c392b5862"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.css.map",
+      "sha256": "3a8415c21ec0ae9edb5682b66624f1d92fff2ab9cfad23f33d9f770aa08c85ef"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css",
+      "sha256": "5246a378f6cccc68fccbbdc89a47777565a72c9af4bf60ab0422ccad532578ff"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-reboot.rtl.min.css.map",
+      "sha256": "f75d33c3eacc75c8342ece3c013a7ae6f127f2b7791ef3f138a9b6c77fc20482"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css",
+      "sha256": "b88cce4788082e836308636bc88b169e41063b7052c116bf30b8ebef7b43a1d1"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.css.map",
+      "sha256": "35f8eb73852bf45bf6a0112cc10588c819cd0cff7dabe2e12fecfde79dced1c6"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css",
+      "sha256": "6415db605f0e66b17518338b30bbd6ff344fb71d517de303623e43d966fff63a"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.min.css.map",
+      "sha256": "ac70e68a9e09673b9a18e71243541242b21b1b411bdd98daf7086a485d736085"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css",
+      "sha256": "33015c920f186d8d96aef78d4275e47d42e4a6b62114eabeb75047f7603b1ac2"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.css.map",
+      "sha256": "a74055ab955efdda2104875f6eb66ca1036ed36252b0a875834c1bca242251a5"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css",
+      "sha256": "ecc6043141601c47350a3adf00afd3955df43cec60a315e4d9bfaf02cff5e375"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap-utilities.rtl.min.css.map",
+      "sha256": "a3c5cadf699c63f15f70e4350f61c9bd5b99d184d74944590cb5c22b47e741e0"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.css",
+      "sha256": "0b39840abb5757c05293ffbc486f91c3b16bfb7842b766d2d9b1244b8603dcf4"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.css.map",
+      "sha256": "2b3355477a7b51919b6bde1d9c2b6573a8d78cae6ead23e267f78d9ca4e60e4c"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "sha256": "b0a21045f42b8884ae43d97fe386f5cc77d09e21972611a89d5b41d8b952b88b"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css.map",
+      "sha256": "f12338536350a422c64d02d6e43ff1dea493c3156ad823fe19761cdd5d56c05b"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css",
+      "sha256": "feb71e354308d1194526e811ce3b9af35e5b817c1ac042411813e1e15c77af7f"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.css.map",
+      "sha256": "ddb61652289560c65fbf6c2ae499d722c1e540a8122acfd57118af823819d61a"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css",
+      "sha256": "ac8d70d860f164f0abefb6e9648190f2652f315b44afe801b5a865e5120f2690"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/css/bootstrap.rtl.min.css.map",
+      "sha256": "ad3cd79677a971bfef80502207e53b3834007ce9492df337818e8853b78800d9"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js",
+      "sha256": "6cda23c8153d3370affcae18a9d2a4ab8c5e68091c864912ec75cfef9e78cfd6"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.js.map",
+      "sha256": "5aae1a596d6b41d27eea8020cb525073d2018c72fd4f730a7d74c136a3afd367"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "sha256": "eb37e4d8bf11df00a045b673a64122ed4602d9b73a7d81888057cd7aac8e5a74"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map",
+      "sha256": "5e3e0763164143baaa1ca0706b6100ba0452f911d6ce9713b48e3dbe07b35125"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js",
+      "sha256": "89d2730969dd588865e1966f5dbb8b4537b9c2ab917f29176c4883a4eed9b059"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.esm.js.map",
+      "sha256": "10f44b829a9691a84bc449fa0948dd33be91218230d71747c136de1ecb2e8ffe"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js",
+      "sha256": "4448d27a279529dd349c02b077a76fecc321b952af29cb4f98b23888346cfdc7"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.esm.min.js.map",
+      "sha256": "4ec6eff33e9594d815113f31bf3ff22e8fefe622474c08f62788648633f5ac73"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.js",
+      "sha256": "bea2bc2b0115b9689dc740dd9b99b92f206b88f0cf97d4dc8eb2994219054950"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.js.map",
+      "sha256": "f56afb1f17bc802243a081e1e713f6f65757bc2de43761a489f423f5cf2f631e"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
+      "sha256": "6824c8ab0f68a745d01989cd7b5eb8f55edf9e2840083e3c38fdccf013f6c553"
+    },
+    {
+      "path": "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js.map",
+      "sha256": "648d357bf9ece3bdc62af0021b831c82025dc6f15f148c38c6ca704221bc61ee"
+    },
+    {
+      "path": "wwwroot/lib/magic/magic.min.css",
+      "sha256": "33d8424f098ef593a2739d511cc56c8fd541218aeb59aaa1090bcdd017ea08b3"
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+@page "/purchase-dashboard"
+@using MudBlazor
+@inject LocalProfileService AuthService
+
+<PageTitle>Purchase Dashboard</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4" Style="background-color: #f5f5f5; min-height: 100vh;">
+    <MudGrid Spacing="3">
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="4" Class="pa-4" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3"><b>By Status</b></MudText>
+                <MudStack Spacing="2">
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">190</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Awaiting</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">127</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Ordered</MudText>
+                        </div>
+                    </MudStack>
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">49</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Confirmed</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">14</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Received</MudText>
+                        </div>
+                    </MudStack>
+                </MudStack>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="4" Class="pa-4" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3"><b>Status</b></MudText>
+                <MudStack Spacing="2">
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Inspected</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">1</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Closed</MudText>
+                        </div>
+                    </MudStack>
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Postponed</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Cancelled</MudText>
+                        </div>
+                    </MudStack>
+                </MudStack>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="4" Class="pa-4" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3"><b>Quick Stats</b></MudText>
+                <MudStack Spacing="2">
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">4</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Delayed</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Due This Week</MudText>
+                        </div>
+                    </MudStack>
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">2</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Due This Month</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">381</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Total</MudText>
+                        </div>
+                    </MudStack>
+                </MudStack>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="4" Class="pa-4" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3"><b>LOT</b></MudText>
+                <MudStack Spacing="2">
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">1044</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Due for Inspection</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">28</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Requested to Purchase</MudText>
+                        </div>
+                    </MudStack>
+                    <MudDivider Class="my-2"/>
+                    <MudStack Row AlignItems="AlignItems.Center" Spacing="1">
+                        <MudIcon Icon="@Icons.Material.Filled.Euro" Color="Color.Success" Size="Size.Small" />
+                        <MudText Typo="Typo.body2">
+                            Value: <b>5,343,695.84 EUR</b>
+                        </MudText>
+                    </MudStack>
+                </MudStack>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="4" Class="pa-4" Style="height: 100%">
+                <MudText Typo="Typo.h6" Class="mb-3"><b>Reclamations</b></MudText>
+                <MudStack Spacing="2">
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Open</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">In Progress</MudText>
+                        </div>
+                    </MudStack>
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Closed</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Total</MudText>
+                        </div>
+                    </MudStack>
+                </MudStack>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="4" Class="pa-4" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3"><b>Quality</b></MudText>
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">All Internal Reclamations</MudText>
+                    <div style="display: flex; justify-content: center;">
+                        <MudChip T = "string" Color="Color.Success" Size="Size.Large" Style="width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px;">276</MudChip>
+                    </div>
+                    
+                    <MudDivider Class="my-2"/>
+                    
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Latest Internal Reclamations (Last 10)</MudText>
+                    <MudStack Spacing="1" Style="max-height: 200px; overflow-y: auto;">
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2"><b>05372</b></MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">15/12/2025 10:00</MudText>
+                        </MudStack>
+                        <MudDivider />
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2"><b>07908</b></MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">11/12/2025 12:00</MudText>
+                        </MudStack>
+                        <MudDivider />
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2"><b>09072</b></MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">11/12/2025 12:00</MudText>
+                        </MudStack>
+                        <MudDivider />
+                        <MudStack Spacing="0">
+                            <MudText Typo="Typo.body2"><b>08316</b></MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">09/12/2025 09:06</MudText>
+                        </MudStack>
+                    </MudStack>
+                </MudStack>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Elevation="4" Class="pa-4" Style="height: 100%">
+                <MudText Typo="Typo.h6" Class="mb-3"><b>Follow-up</b></MudText>
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">This week forecast + updates</MudText>
+                    <div style="display: flex; justify-content: center;">
+                        <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                    </div>
+                    
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Next week forecast</MudText>
+                    <div style="display: flex; justify-content: center;">
+                        <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                    </div>
+                    
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Expected to arrive but didn't</MudText>
+                    <div style="display: flex; justify-content: center;">
+                        <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                    </div>
+                    
+                    <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Row>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">4</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Expected today</MudText>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <MudChip T = "string" Color="Color.Success" Size="Size.Small" Style="width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px;">0</MudChip>
+                            <MudText Typo="Typo.caption" Style="margin-top: 4px;">Expected tomorrow</MudText>
+                        </div>
+                    </MudStack>
+                </MudStack>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

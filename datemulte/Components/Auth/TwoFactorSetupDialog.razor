@@ -1,0 +1,84 @@
+@inject TwoFactorService TwoFactorService
+@inject UserProfileService ProfileService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Security" Class="mr-2" />
+            @(isDisabling ? "Disable 2FA" : "Enable Two-Factor Authentication")
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @if(isDisabling)
+        {
+            <MudText Class="mb-3">Enter your authenticator code to disable 2FA:</MudText>
+            <MudTextField @bind-Value="verificationCode" Label="6-digit code" Variant="Variant.Outlined" MaxLength="6" />
+        }
+        else if(!showVerification)
+        {
+            <MudText Class="mb-3">Scan this QR code with your authenticator app:</MudText>
+            <div style="text-align: center;" class="mb-3">
+                <MudImage Src="@qrCodeUrl" Alt="QR Code" Style="max-width: 200px;" />
+            </div>
+            <MudText Typo="Typo.caption" Class="mb-3">Or enter this key manually: <code>@secret</code></MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="() => showVerification = true">
+                Next
+            </MudButton>
+        }
+        else
+        {
+            <MudText Class="mb-3">Enter the 6-digit code from your authenticator:</MudText>
+            <MudTextField @bind-Value="verificationCode" Label="6-digit code" Variant="Variant.Outlined" MaxLength="6" />
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        @if(showVerification || isDisabling)
+        {
+            <MudButton Color="@(isDisabling ? Color.Error : Color.Success)" Variant="Variant.Filled" OnClick="Verify" Disabled="@(verificationCode?.Length != 6)">
+                @(isDisabling ? "Disable 2FA" : "Enable 2FA")
+            </MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
+    [Parameter] public Guid UserId { get; set; }
+    [Parameter] public string UserEmail { get; set; } = "";
+    [Parameter] public bool IsDisabling { get; set; }
+    [Parameter] public string? ExistingSecret { get; set; }
+
+    private string secret = "";
+    private string qrCodeUrl = "";
+    private string verificationCode = "";
+    private bool showVerification;
+    private bool isDisabling;
+
+    protected override void OnInitialized()
+    {
+        isDisabling = IsDisabling;
+        if (!isDisabling)
+        {
+            (secret, qrCodeUrl) = TwoFactorService.GenerateSetupInfo(UserEmail);
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task Verify()
+    {
+        var secretToValidate = isDisabling ? ExistingSecret : secret;
+        if (TwoFactorService.ValidateCode(secretToValidate!, verificationCode))
+        {
+            await ProfileService.UpdateTwoFactorAsync(UserId, !isDisabling, isDisabling ? null : secret);
+            Snackbar.Add(isDisabling ? "2FA disabled" : "2FA enabled successfully!", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            Snackbar.Add("Invalid code. Please try again.", Severity.Error);
+        }
+    }
+}

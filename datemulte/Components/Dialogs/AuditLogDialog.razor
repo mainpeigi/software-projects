@@ -1,0 +1,84 @@
+@using Datemulte_2.Services.Security
+@using Datemulte_2.Models
+@using MudBlazor
+@inject AuditLogService AuditLogService
+
+<MudDialog>
+    <DialogContent>
+        <MudText Typo="Typo.h6" Class="mb-4">Activity Log</MudText>
+
+        @if (loading)
+        {
+            <MudProgressCircular Indeterminate="true" />
+        }
+        else if (auditLogs.Any())
+        {
+            <MudTimeline TimelinePosition="TimelinePosition.Start">
+                @foreach (var log in auditLogs)
+                {
+                    <MudTimelineItem Color="GetActionColor(log.Action)" Size="Size.Small">
+                        <ItemOpposite>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                @log.CreatedAt.ToLocalTime().ToString("g")
+                            </MudText>
+                        </ItemOpposite>
+                        <ItemContent>
+                            <MudText Typo="Typo.body2" Style="font-weight: 600;">
+                                @log.Action
+                            </MudText>
+                            <MudText Typo="Typo.body2">
+                                @log.DetailsJson
+                            </MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                User: @(log.UserId?.ToString() ?? "System")
+                            </MudText>
+                        </ItemContent>
+                    </MudTimelineItem>
+                }
+            </MudTimeline>
+        }
+        else
+        {
+            <MudText Color="Color.Secondary">No activity recorded yet.</MudText>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public Guid SessionId { get; set; }
+
+    private List<AuditLog> auditLogs = new();
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAuditLogs();
+    }
+
+    private async Task LoadAuditLogs()
+    {
+        loading = true;
+        auditLogs = await AuditLogService.GetEntityLogsAsync("DataSession", SessionId);
+        loading = false;
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private Color GetActionColor(AuditAction action)
+    {
+        return action switch
+        {
+            AuditAction.Created => Color.Success,
+            AuditAction.Updated => Color.Info,
+            AuditAction.Deleted => Color.Error,
+            AuditAction.Viewed => Color.Default,
+            _ => Color.Default
+        };
+    }
+}

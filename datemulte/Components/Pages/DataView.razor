@@ -1,0 +1,345 @@
+@page "/data-view"
+@using Datemulte_2.Models
+@using Datemulte_2.Services
+@using MudBlazor
+@inject CsvPlotterStateService StateService
+@inject IJSRuntime JS
+
+<PageTitle>Data View</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4" Style="height: calc(100vh - 120px);">
+    <MudPaper Elevation="0" Style="height: 100%;">
+
+        <!-- Header -->
+        <div class="d-flex justify-space-between align-center mb-4">
+            <MudText Typo="Typo.h5" Color="Color.Primary">
+                <MudIcon Icon="@Icons.Material.Filled.TableChart" Class="mr-2" /> Data View & Calculations
+            </MudText>
+            @if (data.Count > 0)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Default">
+                    @data.Count rows × @availableColumns.Count columns
+                </MudText>
+            }
+        </div>
+        @if(ok)
+        {
+            <MudDivider Class="mb-4" />
+            <MudButton Variant = "Variant.Filled"
+                          Color="Color.Primary"
+                          Href="/csv-plotter"
+                          StartIcon="@Icons.Material.Filled.ShowChart">
+                 Go to CSV Plotter
+            </MudButton>
+        }
+        else
+        {
+            
+        }
+        <MudDivider Class="mb-4" />
+        @if (data.Count == 0)
+        {
+            <!-- Empty State -->
+            <MudPaper Elevation="3" Class="pa-8" Style="text-align: center; margin-top: 100px;">
+                <MudIcon Icon="@Icons.Material.Filled.TableChart" Size="Size.Large" Color="Color.Default" />
+                <MudText Typo="Typo.h6" Class="mt-4 mb-2">No Data Loaded</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Default" Class="mb-4">
+                    Please load a CSV file from the CSV Plotter page first.
+                </MudText>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Href="/csv-plotter"
+                           StartIcon="@Icons.Material.Filled.ShowChart">
+                    Go to CSV Plotter
+                </MudButton>
+            </MudPaper>
+        }
+        else
+        {
+            <!-- Main Content - Split View -->
+            <div style="display: flex; gap: 16px; height: calc(100% - 80px);">
+
+                <!-- Left Side - Calculations Panel -->
+                <MudPaper Elevation="2" Class="pa-4" Style="width: 400px; overflow-y: auto;">
+                    <MudText Typo="Typo.h6" Class="mb-3">
+                        <MudIcon Icon="@Icons.Material.Filled.Calculate" Size="Size.Small" /> Calculations
+                    </MudText>
+                    <MudDivider Class="mb-3" />
+
+                    <!-- Formula Input -->
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">Create Calculated Column</MudText>
+
+                    <MudTextField @bind-Value="newColumnName"
+                                  Label="New Column Name"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  Class="mb-3" />
+
+                    <MudTextField @bind-Value="formulaInput"
+                                  Label="Enter Formula (use = to start)"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  Lines="3"
+                                  Class="mb-3"
+                                  HelperText="Tip: Use {start:end} to limit calculations to specific row ranges"
+                                  Placeholder="Examples:&#10;=SUM(Temperature, Pressure) - Add values across columns&#10;=AVERAGE(Speed{0:100}) - Average first 100 rows&#10;=Temperature * 1.8 + 32 - Convert Celsius to Fahrenheit" />
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Success"
+                               FullWidth="true"
+                               StartIcon="@Icons.Material.Filled.AddCircle"
+                               OnClick="CreateCalculatedColumn"
+                               Disabled="@(string.IsNullOrWhiteSpace(newColumnName) || string.IsNullOrWhiteSpace(formulaInput))">
+                        Create Column
+                    </MudButton>
+
+                    @if (!string.IsNullOrEmpty(formulaError))
+                    {
+                        <MudAlert Severity="Severity.Error" Class="mt-2" Dense="true">@formulaError</MudAlert>
+                    }
+
+                    <!-- Available Functions -->
+                    <MudExpansionPanels Class="mt-4" Elevation="0">
+                        <MudExpansionPanel Text="📖 Function Reference Guide">
+                            <MudText Typo="Typo.body2" Color="Color.Primary" Class="mb-3"><strong>💡 Quick Tip: Range Notation</strong></MudText>
+                            <MudText Typo="Typo.caption" Class="mb-2">Limit calculations to specific rows using {start:end}</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-3" Style="font-style: italic;">Example: Temperature{0:100} uses only rows 0-100</MudText>
+
+                            <MudDivider Class="my-3" />
+
+                            <MudText Typo="Typo.body2" Class="mb-2"><strong>📊 Basic Aggregation</strong></MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>SUM(col1, col2, ...)</strong> - Add values across multiple columns</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>AVERAGE(col1, col2, ...)</strong> - Calculate mean of columns</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>MIN(col1, col2, ...)</strong> - Find smallest value across columns</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>MAX(col1, col2, ...)</strong> - Find largest value across columns</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>COUNT(col1, col2, ...)</strong> - Count numeric values only</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>COUNTA(col1, col2, ...)</strong> - Count all non-empty values</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-3">• <strong>MEDIAN(column)</strong> - Find middle value (single column)</MudText>
+
+                            <MudText Typo="Typo.body2" Class="mb-2"><strong>🔢 Math Operations</strong></MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>ROUND(column, digits)</strong> - Round to specified decimal places</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1" Style="padding-left: 12px; font-style: italic;">Example: ROUND(Temperature, 2) → 23.456 becomes 23.46</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>ABS(column)</strong> - Get absolute value (remove negative sign)</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-3" Style="padding-left: 12px; font-style: italic;">Example: ABS(Error) → -5.2 becomes 5.2</MudText>
+
+                            <MudText Typo="Typo.body2" Class="mb-2"><strong>📈 Statistical Analysis</strong></MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>STDEV(column)</strong> - Standard deviation (measures data spread)</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>VAR(column)</strong> - Variance (square of standard deviation)</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>CORREL(col1, col2)</strong> - Correlation coefficient (-1 to 1)</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-2" Style="padding-left: 12px; font-style: italic;">1 = perfect positive, -1 = perfect negative, 0 = no correlation</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-3" Style="padding-left: 12px; font-style: italic;">Note: Statistical functions analyze entire column</MudText>
+
+                            <MudText Typo="Typo.body2" Class="mb-2"><strong>❓ Conditional Logic</strong></MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>IF(condition, true_result, false_result)</strong> - Simple if-then-else</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1" Style="padding-left: 12px; font-style: italic;">Example: IF(Temp&gt;100, 1, 0) → Returns 1 if hot, 0 if not</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>IFS(cond1, result1, cond2, result2, ...)</strong> - Multiple conditions</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1" Style="padding-left: 12px; font-style: italic;">Example: IFS(Temp&gt;100, "hot", Temp&gt;50, "warm", "cold")</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>AVERAGEIF(range, criteria, avg_col)</strong> - Average if condition met</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>SUMIF(range, criteria, sum_col)</strong> - Sum if condition met</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-3" Style="padding-left: 12px; font-style: italic;">Criteria examples: "&gt;10", "&lt;=50", "=100"</MudText>
+
+                            <MudText Typo="Typo.body2" Class="mb-2"><strong>🕐 Time & Date Functions</strong></MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>NOW()</strong> - Current date and time</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>HOUR(datetime_col)</strong> - Extract hour (0-23)</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>MINUTE(datetime_col)</strong> - Extract minute (0-59)</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>SECOND(datetime_col)</strong> - Extract second (0-59)</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-3">• <strong>TEXT(column)</strong> - Format value as text</MudText>
+
+                            <MudText Typo="Typo.body2" Class="mb-2"><strong>➕ Arithmetic Expressions</strong></MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">Combine columns with standard math operators:</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>+</strong> Addition: Temperature + Offset</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>-</strong> Subtraction: Max - Min</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>*</strong> Multiplication: Speed * Time</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1">• <strong>/</strong> Division: Distance / Time</MudText>
+                            <MudText Typo="Typo.caption" Class="mb-1" Style="padding-left: 12px; font-style: italic;">Example: Celsius * 1.8 + 32 (converts to Fahrenheit)</MudText>
+
+                            <MudAlert Severity="Severity.Info" Dense="true" Class="mt-3">
+                                <strong>Pro Tips:</strong><br/>
+                                • Use descriptive column names for clarity<br/>
+                                • Combine ranges with functions: SUM(Col1{0:50}, Col2{0:50})<br/>
+                                • Mix arithmetic and functions: ROUND(Col1 * 1.5, 2)
+                            </MudAlert>
+                        </MudExpansionPanel>
+                    </MudExpansionPanels>
+
+                    <!-- Calculated Columns List -->
+                    @if (calculatedColumns.Count > 0)
+                    {
+                        <MudDivider Class="my-3" />
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">Calculated Columns:</MudText>
+                        @foreach (var calcCol in calculatedColumns)
+                        {
+                            <MudChip T="string"
+                                     Color="Color.Success"
+                                     Size="Size.Small"
+                                     OnClose="@(() => RemoveCalculatedColumn(calcCol))"
+                                     Class="mb-1">
+                                @calcCol
+                            </MudChip>
+                        }
+                    }
+                </MudPaper>
+
+                <!-- Right Side - Data Table -->
+                <MudPaper Elevation="2" Class="flex-grow-1" Style="overflow: hidden;">
+                    <div style="height: 100%; overflow: auto;">
+                        <MudTable Items="@GetPagedData()"
+                                  Striped="true"
+                                  Hover="true"
+                                  Dense="true"
+                                  FixedHeader="true"
+                                  Height="calc(100vh - 300px)">
+                            <HeaderContent>
+                                @foreach (var col in availableColumns)
+                                {
+                                    <MudTh Style="white-space: nowrap; font-weight: 600;">
+                                        @col
+                                        @if (calculatedColumns.Contains(col))
+                                        {
+                                            <MudIcon Icon="@Icons.Material.Filled.Calculate" Size="Size.Small" Color="Color.Success" Style="vertical-align: middle; margin-left: 4px;" />
+                                        }
+                                    </MudTh>
+                                }
+                            </HeaderContent>
+                            <RowTemplate>
+                                @foreach (var col in availableColumns)
+                                {
+                                    <MudTd DataLabel="@col">@context.GetValue(col)</MudTd>
+                                }
+                            </RowTemplate>
+                        </MudTable>
+                    </div>
+                </MudPaper>
+
+            </div>
+        }
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<GenericCsvRow> data = new();
+    private List<string> availableColumns = new();
+    private List<string> numericColumns = new();
+    private List<string> calculatedColumns = new();
+    private Dictionary<string, string> calculatedColumnFormulas = new();
+    public bool ok = true;
+    private string newColumnName = "";
+    private string formulaInput = "";
+    private string formulaError = "";
+
+    protected override void OnInitialized()
+    {
+        LoadStateFromService();
+    }
+
+    private void LoadStateFromService()
+    {
+        var state = StateService.GetState();
+        data = state.Data;
+        availableColumns = new List<string>(state.AvailableColumns);
+        numericColumns = new List<string>(state.NumericColumns);
+        calculatedColumns = new List<string>(state.CalculatedColumns);
+        ok = data.Count > 0;
+    }
+
+    private List<GenericCsvRow> GetPagedData()
+    {
+        // For now, show first 1000 rows to avoid performance issues
+        return data.Take(1000).ToList();
+    }
+
+    private void CreateCalculatedColumn()
+    {
+        formulaError = "";
+
+        if (string.IsNullOrWhiteSpace(newColumnName) || string.IsNullOrWhiteSpace(formulaInput))
+        {
+            formulaError = "Please provide both column name and formula.";
+            return;
+        }
+
+        if (availableColumns.Contains(newColumnName))
+        {
+            formulaError = $"Column '{newColumnName}' already exists.";
+            return;
+        }
+
+        // Parse and validate formula
+        var parseResult = FormulaParser.ParseFormula(formulaInput, numericColumns);
+
+        if (!parseResult.success)
+        {
+            formulaError = parseResult.errorMessage;
+            return;
+        }
+
+        // Calculate the values
+        try
+        {
+            var calculatedValues = parseResult.calculator!(data);
+
+            // Add the calculated values to each row
+            for (int i = 0; i < data.Count && i < calculatedValues.Count; i++)
+            {
+                data[i].Data[newColumnName] = calculatedValues[i].ToString();
+            }
+
+            // Store formula and add to calculated columns
+            calculatedColumnFormulas[newColumnName] = formulaInput;
+
+            if (!calculatedColumns.Contains(newColumnName))
+                calculatedColumns.Add(newColumnName);
+
+            if (!availableColumns.Contains(newColumnName))
+                availableColumns.Add(newColumnName);
+
+            if (!numericColumns.Contains(newColumnName))
+                numericColumns.Add(newColumnName);
+
+            // Update state service so CsvPlotter can use the new column
+            UpdateStateService();
+
+            // Clear inputs
+            newColumnName = "";
+            formulaInput = "";
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            formulaError = $"Error calculating values: {ex.Message}";
+        }
+    }
+
+    private void RemoveCalculatedColumn(string columnName)
+    {
+        calculatedColumns.Remove(columnName);
+        calculatedColumnFormulas.Remove(columnName);
+        availableColumns.Remove(columnName);
+        numericColumns.Remove(columnName);
+
+        // Remove from data rows
+        foreach (var row in data)
+        {
+            row.Data.Remove(columnName);
+        }
+
+        // Update state service
+        UpdateStateService();
+
+        StateHasChanged();
+    }
+
+    private void UpdateStateService()
+    {
+        // Update the state service so changes are reflected in CsvPlotter
+        var currentState = StateService.GetState();
+        currentState.Data = data;
+        currentState.AvailableColumns = new List<string>(availableColumns);
+        currentState.NumericColumns = new List<string>(numericColumns);
+        currentState.CalculatedColumns = new List<string>(calculatedColumns);
+
+        StateService.SaveState(currentState);
+    }
+}

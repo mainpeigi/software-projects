@@ -1,0 +1,26 @@
+@page "/"
+
+<PageTitle>Datemulte - Local edition</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudPaper Elevation="0" Class="pa-8 mb-6" Style="background: linear-gradient(135deg, #20818e 0%, #06b6d4 100%); border-radius: 16px; text-align: center;">
+        <MudIcon Icon="@Icons.Material.Filled.ShowChart" Style="font-size: 72px; color: white;" />
+        <MudText Typo="Typo.h2" Style="color: white; font-weight: 700;">Datemulte</MudText>
+        <MudText Typo="Typo.h6" Class="my-4" Style="color: white;">Explore CSV and Excel data with interactive charts and statistics.</MudText>
+        <MudButton Href="/csv-plotter" Color="Color.Surface" Variant="Variant.Filled" Size="Size.Large">Open Data Plotter</MudButton>
+    </MudPaper>
+    <MudGrid>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-6" Style="height:100%;">
+                <MudText Typo="Typo.h5" Class="mb-3">Try a sample</MudText>
+                <MudText Class="mb-3">Download the sample, open Data Plotter and upload it. Select Temperature to display the chart.</MudText>
+                <a href="samples/temperatures.csv" download>Download sample CSV</a>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-6" Style="height:100%;">
+                <MudText Typo="Typo.h5" Class="mb-3">Your work stays on this laptop</MudText>
+                <MudText>Use Save Session and Load Session in the plotter. No online account is required. Close the application before copying its complete folder to another laptop.</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="lib/magic/magic.min.css"/>
+    <link rel="stylesheet" href="Datemulte_2.styles.css" />
+    <HeadOutlet />
+</head>
+
+<body>
+    <Routes />
+
+    <div id="app-loading">
+        <div class="hexagon-grid"></div>
+        <!--<div class="light-beams"></div>-->
+        <div class="particles-bg"></div>
+        <div class="glowing-orbs"></div>
+        <div class="geometric-shapes"></div>
+
+        <div class="loading-container">
+            <div class="logo-formation">
+                <div class="logo-part logo-a">A</div>
+                <div class="logo-part logo-l1">L</div>
+                <div class="logo-part logo-l2">L</div>
+                <div class="logo-part logo-e">E</div>
+                <div class="logo-part logo-n">N</div>
+                <div class="logo-part logo-g">G</div>
+                <div class="logo-part logo-r">R</div>
+                <div class="logo-part logo-a2">A</div>
+            </div>
+
+            <div class="underline-subtitle-row">
+                <div class="brand-underline"></div>
+                <div class="brand-subtitle">Flowmeters</div>
+            </div>
+
+            <div class="energy-burst">
+                <div class="burst-ray"></div>
+                <div class="burst-ray"></div>
+                <div class="burst-ray"></div>
+                <div class="burst-ray"></div>
+                <div class="burst-ray"></div>
+                <div class="burst-ray"></div>
+                <div class="burst-ray"></div>
+                <div class="burst-ray"></div>
+            </div>
+
+            <svg class="progress-ring" viewBox="0 0 200 200">
+                <circle class="progress-ring-bg" cx="100" cy="100" r="90" />
+                <circle class="progress-ring-fill" cx="100" cy="100" r="90" />
+            </svg>
+
+            <!--<div class="loading-percentage">0%</div> -->
+        </div>
+    </div>
+    <script>
+        (function() {
+            function random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function randomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            const particlesContainer = document.querySelector('.particles-bg');
+            const particleCount = randomInt(8, 20);
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = random(2, 8);
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.top = random(0, 100) + '%';
+                particle.style.left = random(0, 100) + '%';
+                particle.style.animationDelay = random(0, 2) + 's';
+                particle.style.animationDuration = random(6, 12) + 's';
+                
+                const tx = random(-200, 200);
+                const ty = random(-200, 200);
+                const scale = random(0.8, 1.5);
+                const rotate = random(0, 360);
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.setProperty('--scale', scale);
+                particle.style.setProperty('--rotate', rotate + 'deg');
+                
+                particlesContainer.appendChild(particle);
+            }
+            /*
+            const lightBeamsContainer = document.querySelector('.light-beams');
+            const beamCount = randomInt(2, 5);
+            for (let i = 0; i < beamCount; i++) {
+                const beam = document.createElement('div');
+                beam.className = 'light-beam';
+                beam.style.left = random(10, 90) + '%';
+                beam.style.animationDelay = random(0, 2) + 's';
+                beam.style.animationDuration = random(3, 5) + 's';
+                lightBeamsContainer.appendChild(beam);
+            }
+            */
+            const orbsContainer = document.querySelector('.glowing-orbs');
+            const orbCount = randomInt(3, 6);
+            for (let i = 0; i < orbCount; i++) {
+                const orb = document.createElement('div');
+                orb.className = 'orb puffIn';
+                const size = random(60, 130);
+                orb.style.width = size + 'px';
+                orb.style.height = size + 'px';
+                orb.style.top = random(10, 85) + '%';
+                orb.style.left = random(5, 90) + '%';
+                orb.style.animationDelay = random(0, 2) + 's';
+                orb.style.animationDuration = random(5, 8) + 's';
+                
+                const tx = random(-60, 60);
+                const ty = random(-80, 80);
+                const scale = random(0.85, 1.15);
+                orb.style.setProperty('--tx', tx + 'px');
+                orb.style.setProperty('--ty', ty + 'px');
+                orb.style.setProperty('--scale', scale);
+                
+                orbsContainer.appendChild(orb);
+            }
+
+            const shapesContainer = document.querySelector('.geometric-shapes');
+            const shapeTypes = ['circle', 'triangle', 'square', 'hexagon', 'diamond'];
+            const shapeCount = randomInt(4, 8);
+            for (let i = 0; i < shapeCount; i++) {
+                const shapeType = shapeTypes[randomInt(0, shapeTypes.length - 1)];
+                const shape = document.createElement('div');
+                shape.className = 'shape shape-' + shapeType;
+                shape.style.top = random(10, 85) + '%';
+                shape.style.left = random(10, 85) + '%';
+                shape.style.animationDelay = random(0, 3) + 's';
+                shape.style.animationDuration = random(10, 18) + 's';
+                
+                const tx = random(-150, 150);
+                const ty = random(-150, 150);
+                const rotate = random(0, 360);
+                const scale = random(0.6, 1.3);
+                shape.style.setProperty('--tx', tx + 'px');
+                shape.style.setProperty('--ty', ty + 'px');
+                shape.style.setProperty('--rotate', rotate + 'deg');
+                shape.style.setProperty('--scale', scale);
+                
+                shapesContainer.appendChild(shape);
+            }
+        })();
+
+        window.addEventListener('DOMContentLoaded', function(){
+            const percentageEl = document.querySelector('.loading-percentage');
+            if(percentageEl){
+                let count = 0;
+                const interval = setInterval(()=>{
+                    count += Math.floor(Math.random()*3)+1;
+                    if(count>=100)
+                    {
+                        count=100;
+                        clearInterval(interval);
+                    }
+                    percentageEl.textContent = count + '%';
+                },50);
+            }
+        });
+    </script>
+    <script src="_framework/blazor.web.js"></script>
+    <script src="lib/echarts/echarts.min.js"></script>
+    <script>
+        // Wait for echarts to be loaded
+        window.waitForEcharts = function(callback, errorCallback, maxAttempts = 50) {
+            var attempts = 0;
+            var checkEcharts = function() {
+                attempts++;
+                if (typeof echarts !== 'undefined') {
+                    callback();
+                } else if (attempts < maxAttempts) {
+                    setTimeout(checkEcharts, 100);
+                } else {
+                    console.error('ECharts failed to load after ' + (maxAttempts * 100) + 'ms');
+                    if (errorCallback) {
+                        errorCallback('ECharts failed to load after ' + (maxAttempts * 100) + 'ms');
+                    }
+                }
+            };
+            checkEcharts();
+        };
+    </script>
+    <!-- ECharts Themes -->
+    <script src="lib/echarts/vintage.js"></script>
+    <script src="lib/echarts/macarons.js"></script>
+    <script src="lib/echarts/infographic.js"></script>
+    <script src="lib/echarts/shine.js"></script>
+    <script src="lib/echarts/roma.js"></script>
+    <!-- Dark Style Themes -->
+    <style>
+        .echarts-container{
+            background-color: #0f172a !important;
+        }
+        canvas {
+            background-color: transparent !important;
+        }
+    </style>
+    <script>
+        (function() {
+            if (typeof echarts !== 'undefined') {
+                setTimeout(function() {
+                    // Dark mode base settings
+                    var darkBase = {
+                        backgroundColor: 'rgba(15, 23, 42, 0)',
+                        textStyle: { color: '#e2e8f0' },
+                        title: {
+                            textStyle: { color: '#e2e8f0' },
+                            subtextStyle: { color: '#cbd5e1' }
+                        },
+                        legend: {
+                            textStyle: { color: '#e2e8f0' }
+                        },
+                        categoryAxis: {
+                            axisLine: { lineStyle: { color: '#64748b' } },
+                            axisTick: { lineStyle: { color: '#64748b' } },
+                            axisLabel: { color: '#cbd5e1' },
+                            splitLine: { lineStyle: { color: ['#334155'] } }
+                        },
+                        valueAxis: {
+                            axisLine: { lineStyle: { color: '#64748b' } },
+                            axisTick: { lineStyle: { color: '#64748b' } },
+                            axisLabel: { color: '#cbd5e1' },
+                            splitLine: { lineStyle: { color: ['#334155'] } }
+                        },
+                        timeAxis: {
+                            axisLine: { lineStyle: { color: '#64748b' } },
+                            axisTick: { lineStyle: { color: '#64748b' } },
+                            axisLabel: { color: '#cbd5e1' },
+                            splitLine: { lineStyle: { color: ['#334155'] } }
+                        },
+                        logAxis: {
+                            axisLine: { lineStyle: { color: '#64748b' } },
+                            axisTick: { lineStyle: { color: '#64748b' } },
+                            axisLabel: { color: '#cbd5e1' },
+                            splitLine: { lineStyle: { color: ['#334155'] } }
+                        },
+                        toolbox: {
+                            iconStyle: { borderColor: '#cbd5e1' },
+                            emphasis: { iconStyle: { borderColor: '#e2e8f0' } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                            borderColor: '#475569',
+                            textStyle: { color: '#e2e8f0' },
+                            axisPointer: {
+                                lineStyle: { color: '#cbd5e1' },
+                                crossStyle: { color: '#cbd5e1' }
+                            }
+                        },
+                        dataZoom: {
+                            backgroundColor: 'rgba(30, 41, 59, 0.5)',
+                            fillerColor: 'rgba(100, 116, 139, 0.2)',
+                            handleStyle: { color: '#cbd5e1' },
+                            dataBackground: { lineStyle: { color: '#475569' } },
+                            textStyle: { color: '#e2e8f0' }
+                        }
+                    };
+
+                    // Theme color palettes (from official ECharts themes)
+                    var themeColors = {
+                        'vintage': ['#d87c7c', '#919e8b', '#d7ab82', '#6e7074', '#61a0a8', '#efa18d', '#787464', '#cc7e63', '#724e58', '#4b565b'],
+                        'macarons': ['#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80', '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa'],
+                        'infographic': ['#c1232b', '#27727b', '#fcce10', '#e87c25', '#b5c334', '#fe8463', '#9bca63', '#fad860', '#f3a43b', '#60c0dd'],
+                        'shine': ['#c12e34', '#e6b600', '#0098d9', '#2b821d', '#005eaa', '#339ca8', '#cda819', '#32a487'],
+                        'roma': ['#e01f54', '#001852', '#f5e8c8', '#b8d2c7', '#c6b38e', '#a4d8c2', '#f3d999', '#d3758f', '#dcc392', '#2e4783']
+                    };
+
+                    // Register each dark theme with its unique color palette
+                    Object.keys(themeColors).forEach(function(themeName) {
+                        var theme = JSON.parse(JSON.stringify(darkBase));
+                        theme.color = themeColors[themeName];
+                        echarts.registerTheme(themeName + '-dark', theme);
+                    });
+                }, 100);
+            }
+        })();
+    </script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="js/fileDownload.js"></script>
+    <script src="js/indexedDb.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/echartsInterop.js"></script>
+    
+</body>
+
+</html>

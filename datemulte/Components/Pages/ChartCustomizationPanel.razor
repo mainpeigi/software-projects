@@ -1,0 +1,1131 @@
+@using Datemulte_2.Services
+
+<MudPaper Elevation="4" Class="pa-3" Style="background-color: #1e293b;">
+    <MudText Typo="Typo.subtitle1" Class="mb-2">
+        <MudIcon Icon="@Icons.Material.Filled.Settings" Size="Size.Small" /> Chart Customization
+    </MudText>
+
+    <div style="max-height: 450px; overflow-y: auto; overflow-x: hidden;">
+    <MudExpansionPanels MultiExpansion="false" Elevation="0" Dense="true" Style="background-color: #1e293b;">
+
+        <!-- ========== APPEARANCE GROUP ========== -->
+        <MudExpansionPanel Text="Appearance" Icon="@Icons.Material.Filled.Palette" Dense="true" Style="background-color: #1e293b;">
+            <MudExpansionPanels MultiExpansion="true" Dense="true" Class="pl-2" Style="background-color: #1e293b;">
+
+                <!-- Colors -->
+                <MudExpansionPanel Text="Colors" Icon="@Icons.Material.Filled.ColorLens" Dense="true" Style="background-color: #1e293b;">
+                    <MudSelect Value="ColorPalette" ValueChanged="(string v) => { ColorPalette = v; ColorPaletteChanged.InvokeAsync(v); }" Label="Color Palette" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-3">
+                        <MudSelectItem Value="@("default")">Default</MudSelectItem>
+                        <MudSelectItem Value="@("cool")">Cool</MudSelectItem>
+                        <MudSelectItem Value="@("warm")">Warm</MudSelectItem>
+                        <MudSelectItem Value="@("vibrant")">Vibrant</MudSelectItem>
+                        <MudSelectItem Value="@("pastel")">Pastel</MudSelectItem>
+                        <MudSelectItem Value="@("custom")">Custom</MudSelectItem>
+                    </MudSelect>
+                    <MudText Typo="Typo.subtitle2" Class="mb-2"><strong>Background Colors</strong></MudText>
+                    @if (ColorPalette == "custom")
+                    {
+                        <MudDivider Class="mb-3"/>
+                        <MudText Typo="Typo.subtitle2" Class="mb-2"><strong>Custom Line Colors</strong></MudText>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <MudColorPicker @bind-Value="@customColor1Mud" Label="Line 1" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                            <MudColorPicker @bind-Value="@customColor2Mud" Label="Line 2" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                            <MudColorPicker @bind-Value="@customColor3Mud" Label="Line 3" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                            <MudColorPicker @bind-Value="@customColor4Mud" Label="Line 4" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                            <MudColorPicker @bind-Value="@customColor5Mud" Label="Line 5" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                            <MudColorPicker @bind-Value="@customColor6Mud" Label="Line 6" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                            <MudColorPicker @bind-Value="@customColor7Mud" Label="Line 7" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                            <MudColorPicker @bind-Value="@customColor8Mud" Label="Line 8" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB"/>
+                        </div>
+                    }
+                    <MudColorPicker @bind-Value="@chartBgColorMud" Label="Chart Background" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@gridBgColorMud" Label="Plot Area Background" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            
+                </MudExpansionPanel>
+                <!-- Chart Type -->
+                <MudExpansionPanel Text="Chart Type" Icon="@Icons.Material.Filled.BarChart" Dense="true" Style="background-color: #1e293b">
+                    <MudSelect Value="ChartType" ValueChanged="(string v) => { ChartType = v; ChartTypeChanged.InvokeAsync(v); }" Label="Chart Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                        <MudSelectItem Value="@("line")">Line</MudSelectItem>
+                        <MudSelectItem Value="@("area")">Area</MudSelectItem>
+                        <MudSelectItem Value="@("stepLine")">Step Line</MudSelectItem>
+                        <MudSelectItem Value="@("stepArea")">Step Area</MudSelectItem>
+                        <MudSelectItem Value="@("bar")">Bar</MudSelectItem>
+                        <MudSelectItem Value="@("stackedBar")">Stacked Bar</MudSelectItem>
+                        <MudSelectItem Value="@("stackedArea")">Stacked Area</MudSelectItem>
+                        <MudSelectItem Value="@("scatter")">Scatter</MudSelectItem>
+                        <MudSelectItem Value="@("pie")">Pie</MudSelectItem>
+                        <MudSelectItem Value="@("radar")">Radar</MudSelectItem>
+                        <MudSelectItem Value="@("candlestick")">Candlestick</MudSelectItem>
+                        <MudSelectItem Value="@("heatmap")">Heatmap</MudSelectItem>
+                        <MudSelectItem Value="@("donut")">Donut</MudSelectItem>
+                        <MudSelectItem Value="@("rose")">Rose</MudSelectItem>
+                        <MudSelectItem Value="@("waterfall")">Waterfall</MudSelectItem>
+                        <MudSelectItem Value="@("barRacing")">Bar Racing</MudSelectItem>
+                        
+                    </MudSelect>
+                </MudExpansionPanel>
+                <!-- Line Style -->
+                <MudExpansionPanel Text="Line Style" Icon="@Icons.Material.Filled.ShowChart" Dense="true" Style="background-color: #1e293b;">
+                    <MudSelect Value="LineStyle" ValueChanged="(string v) => { LineStyle = v; LineStyleChanged.InvokeAsync(v); }" Label="Line Style" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                        <MudSelectItem Value="@("solid")">Solid</MudSelectItem>
+                        <MudSelectItem Value="@("dashed")">Dashed</MudSelectItem>
+                        <MudSelectItem Value="@("dotted")">Dotted</MudSelectItem>
+                    </MudSelect>
+                    <MudSlider Value="LineOpacity" ValueChanged="(int v) => { LineOpacity = v; LineOpacityChanged.InvokeAsync(v); }" Min="0" Max="100" Step="10" Color="Color.Primary" Class="mb-2">
+                        Line Opacity: @LineOpacity%
+                    </MudSlider>
+                    <MudSlider Value="AreaOpacity" ValueChanged="(int v) => { AreaOpacity = v; AreaOpacityChanged.InvokeAsync(v); }" Min="0" Max="100" Step="10" Color="Color.Primary" Class="mb-2">
+                        Area Opacity: @AreaOpacity%
+                    </MudSlider>
+                    <MudSwitch T="bool" Value="EnableSmoothLines" ValueChanged="(bool v) => { EnableSmoothLines = v; EnableSmoothLinesChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Smooth Curves" />
+                </MudExpansionPanel>
+
+            </MudExpansionPanels>
+        </MudExpansionPanel>
+
+        <!-- ========== DATA DISPLAY GROUP ========== -->
+        <MudExpansionPanel Text="Data Display" Icon="@Icons.Material.Filled.DataArray" Dense="true" Style="background-color: #1e293b;">
+            <MudExpansionPanels MultiExpansion="true" Dense="true" Class="pl-2" Style="background-color: #1e293b;">
+
+                <!-- Markers -->
+                <MudExpansionPanel Text="Markers" Icon="@Icons.Material.Filled.Circle" Dense="true" Style="background-color: #1e293b;">
+            <MudSwitch T="bool" 
+                       Value="ShowDataPointMarkers" 
+                       ValueChanged="@((bool v) => { ShowDataPointMarkers = v; ShowDataPointMarkersChanged.InvokeAsync(v); })"
+                       Color="Color.Primary" 
+                       Label="Show Markers on All Points" 
+                       Class="mb-3" />
+            <MudSelect Value="SymbolType" ValueChanged="(string v) => { SymbolType = v; SymbolTypeChanged.InvokeAsync(v); }" Label="Symbol Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                <MudSelectItem Value="@("circle")">Circle</MudSelectItem>
+                <MudSelectItem Value="@("rect")">Rectangle</MudSelectItem>
+                <MudSelectItem Value="@("roundRect")">Rounded Rectangle</MudSelectItem>
+                <MudSelectItem Value="@("triangle")">Triangle</MudSelectItem>
+                <MudSelectItem Value="@("diamond")">Diamond</MudSelectItem>
+                <MudSelectItem Value="@("pin")">Pin</MudSelectItem>
+                <MudSelectItem Value="@("arrow")">Arrow</MudSelectItem>
+                <MudSelectItem Value="@("none")">None (Hide Markers)</MudSelectItem>
+            </MudSelect>
+            <MudNumericField Value="SymbolSize" ValueChanged="(int v) => { SymbolSize = v; SymbolSizeChanged.InvokeAsync(v); }" Label="Symbol Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="2" Max="30" />
+                </MudExpansionPanel>
+
+                <!-- Data Labels -->
+                <MudExpansionPanel Text="Data Labels" Icon="@Icons.Material.Filled.Label" Dense="true" Style="background-color: #1e293b;">
+            <MudSwitch T="bool" Value="ShowDataLabels" ValueChanged="(bool v) => { ShowDataLabels = v; ShowDataLabelsChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Data Labels" Class="mb-2" />
+            @if (ShowDataLabels)
+            {
+                <MudSelect Value="DataLabelPosition" ValueChanged="(string v) => { DataLabelPosition = v; DataLabelPositionChanged.InvokeAsync(v); }" Label="Position" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                    <MudSelectItem Value="@("top")">Top</MudSelectItem>
+                    <MudSelectItem Value="@("inside")">Inside</MudSelectItem>
+                    <MudSelectItem Value="@("insideTop")">Inside Top</MudSelectItem>
+                    <MudSelectItem Value="@("bottom")">Bottom</MudSelectItem>
+                    <MudSelectItem Value="@("left")">Left</MudSelectItem>
+                    <MudSelectItem Value="@("right")">Right</MudSelectItem>
+                </MudSelect>
+                        <MudColorPicker @bind-Value="@dataLabelColorMud" Label="Label Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                <MudNumericField Value="DataLabelFontSize" ValueChanged="(int v) => { DataLabelFontSize = v; DataLabelFontSizeChanged.InvokeAsync(v); }" Label="Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                <MudSelect Value="DataLabelFontWeight" ValueChanged="(string v) => { DataLabelFontWeight = v; DataLabelFontWeightChanged.InvokeAsync(v); }" Label="Font Weight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                    <MudSelectItem Value="@("normal")">Normal</MudSelectItem>
+                    <MudSelectItem Value="@("bold")">Bold</MudSelectItem>
+                    <MudSelectItem Value="@("bolder")">Bolder</MudSelectItem>
+                    <MudSelectItem Value="@("lighter")">Lighter</MudSelectItem>
+                </MudSelect>
+                        <MudColorPicker @bind-Value="@dataLabelBackgroundColorMud" Label="Background Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@dataLabelBorderColorMud" Label="Border Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                <MudNumericField Value="DataLabelBorderWidth" ValueChanged="(int v) => { DataLabelBorderWidth = v; DataLabelBorderWidthChanged.InvokeAsync(v); }" Label="Border Width" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="5" Class="mb-2" />
+                <MudNumericField Value="DataLabelBorderRadius" ValueChanged="(int v) => { DataLabelBorderRadius = v; DataLabelBorderRadiusChanged.InvokeAsync(v); }" Label="Border Radius" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="10" Class="mb-2" />
+                <MudNumericField Value="DataLabelPadding" ValueChanged="(int v) => { DataLabelPadding = v; DataLabelPaddingChanged.InvokeAsync(v); }" Label="Padding" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="20" Class="mb-2" />
+                <MudTextField Value="DataLabelFormatter" ValueChanged="(string v) => { DataLabelFormatter = v; DataLabelFormatterChanged.InvokeAsync(v); }" Label="Formatter (e.g., {c})" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" />
+                <MudNumericField Value="DataLabelRotate" ValueChanged="(int v) => { DataLabelRotate = v; DataLabelRotateChanged.InvokeAsync(v); }" Label="Rotation (degrees)" Variant="Variant.Outlined" Margin="Margin.Dense" Min="-90" Max="90" Class="mb-2" />
+                <MudSwitch T="bool" Value="DataLabelShowOnHighlight" ValueChanged="(bool v) => { DataLabelShowOnHighlight = v; DataLabelShowOnHighlightChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Only on Highlight" />
+            }
+                </MudExpansionPanel>
+
+                <!-- Legend -->
+                <MudExpansionPanel Text="Legend" Icon="@Icons.Material.Filled.ViewList" Dense="true" Style="background-color: #1e293b;">
+            <MudSwitch T="bool" Value="ShowLegend" ValueChanged="(bool v) => { ShowLegend = v; ShowLegendChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Legend" Class="mb-2" />
+            @if (ShowLegend)
+            {
+                <MudSelect Value="LegendPosition" ValueChanged="(string v) => { LegendPosition = v; LegendPositionChanged.InvokeAsync(v); }" Label="Position" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                    <MudSelectItem Value="@("top")">Top</MudSelectItem>
+                    <MudSelectItem Value="@("bottom")">Bottom</MudSelectItem>
+                    <MudSelectItem Value="@("left")">Left</MudSelectItem>
+                    <MudSelectItem Value="@("right")">Right</MudSelectItem>
+                </MudSelect>
+                <MudSelect Value="LegendOrient" ValueChanged="(string v) => { LegendOrient = v; LegendOrientChanged.InvokeAsync(v); }" Label="Orientation" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                    <MudSelectItem Value="@("horizontal")">Horizontal</MudSelectItem>
+                    <MudSelectItem Value="@("vertical")">Vertical</MudSelectItem>
+                </MudSelect>
+                <MudNumericField Value="LegendFontSize" ValueChanged="(int v) => { LegendFontSize = v; LegendFontSizeChanged.InvokeAsync(v); }" Label="Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@legendTextColorMud" Label="Text Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@legendBackgroundColorMud" Label="Background Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@legendBorderColorMud" Label="Border Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                <MudNumericField Value="LegendBorderWidth" ValueChanged="(int v) => { LegendBorderWidth = v; LegendBorderWidthChanged.InvokeAsync(v); }" Label="Border Width" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="5" Class="mb-2" />
+                <MudNumericField Value="LegendBorderRadius" ValueChanged="(int v) => { LegendBorderRadius = v; LegendBorderRadiusChanged.InvokeAsync(v); }" Label="Border Radius" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="20" Class="mb-2" />
+                <MudNumericField Value="LegendPadding" ValueChanged="(int v) => { LegendPadding = v; LegendPaddingChanged.InvokeAsync(v); }" Label="Padding" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="20" Class="mb-2" />
+                <MudNumericField Value="LegendItemGap" ValueChanged="(int v) => { LegendItemGap = v; LegendItemGapChanged.InvokeAsync(v); }" Label="Item Gap" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="50" />
+            }
+                </MudExpansionPanel>
+
+            </MudExpansionPanels>
+        </MudExpansionPanel>
+
+        <!-- ========== AXES & GRID GROUP ========== -->
+        <MudExpansionPanel Text="Axes & Grid" Icon="@Icons.Material.Filled.GridOn" Dense="true" Style="background-color: #1e293b;">
+            <MudExpansionPanels MultiExpansion="true" Dense="true" Class="pl-2" Style="background-color: #1e293b;">
+                <!-- X-Axis -->
+                <MudExpansionPanel Text="X-Axis" Icon="@Icons.Material.Filled.HorizontalRule" Dense="true" Style="background-color: #1e293b;">
+                @if (ChartLayout == "horizontal" || ChartLayout == "vertical")
+                {
+                    <MudSelect T="string" @bind-Value="SelectedChartForAxisEdit" Label="Edit Chart" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-3">
+                        <MudSelectItem Value="@("chart1")">Chart 1</MudSelectItem>
+                        <MudSelectItem Value="@("chart2")">Chart 2</MudSelectItem>
+                        <MudSelectItem Value="@("chart3")">Chart 3</MudSelectItem>
+                        <MudSelectItem Value="@("chart4")">Chart 4</MudSelectItem>
+                        <MudSelectItem Value="@("chart5")">Chart 5</MudSelectItem>
+                        <MudSelectItem Value="@("chart6")">Chart 6</MudSelectItem>
+                        <MudSelectItem Value="@("chart7")">Chart 7</MudSelectItem>
+                        <MudSelectItem Value="@("chart8")">Chart 8</MudSelectItem>
+                    </MudSelect>
+                }
+            <MudTextField Value="XAxisName" ValueChanged="(string v) => HandleXAxisNameChangeImmediate(v)" Label="Axis Label" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" Immediate="false" />
+            <MudSelect Value="XAxisNameLocation" ValueChanged="(string v) => { XAxisNameLocation = v; XAxisNameLocationChanged.InvokeAsync(v); }" Label="Label Location" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                <MudSelectItem Value="@("start")">Start</MudSelectItem>
+                <MudSelectItem Value="@("middle")">Middle</MudSelectItem>
+                <MudSelectItem Value="@("end")">End</MudSelectItem>
+            </MudSelect>
+            <MudNumericField Value="XAxisNameGap" ValueChanged="(int v) => { XAxisNameGap = v; XAxisNameGapChanged.InvokeAsync(v); }" Label="Label Gap" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="100" Class="mb-2" />
+            <MudNumericField Value="XAxisNameFontSize" ValueChanged="(int v) => { XAxisNameFontSize = v; XAxisNameFontSizeChanged.InvokeAsync(v); }" Label="Axis Name Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@xAxisNameColorMud" Label="Axis Name Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            <MudNumericField Value="XAxisLabelFontSize" ValueChanged="(int v) => { XAxisLabelFontSize = v; XAxisLabelFontSizeChanged.InvokeAsync(v); }" Label="Label Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@xAxisLabelColorMud" Label="Label Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            <MudNumericField Value="XAxisLabelRotate" ValueChanged="(int v) => { XAxisLabelRotate = v; XAxisLabelRotateChanged.InvokeAsync(v); }" Label="Label Rotation" Variant="Variant.Outlined" Margin="Margin.Dense" Min="-90" Max="90" Class="mb-2" />
+            <MudNumericField Value="XAxisLabelMargin" ValueChanged="(int v) => { XAxisLabelMargin = v; XAxisLabelMarginChanged.InvokeAsync(v); }" Label="Label Margin" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="50" Class="mb-2" />
+            <MudSwitch T="bool" Value="XAxisShowTick" ValueChanged="(bool v) => { XAxisShowTick = v; XAxisShowTickChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Tick Marks" Class="mb-2" />
+            <MudNumericField Value="XAxisTickLength" ValueChanged="(int v) => { XAxisTickLength = v; XAxisTickLengthChanged.InvokeAsync(v); }" Label="Tick Length" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="20" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@xAxisTickColorMud" Label="Tick Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" />
+                </MudExpansionPanel>
+
+                <!-- Y-Axis -->
+                <MudExpansionPanel Text="Y-Axis" Icon="@Icons.Material.Filled.VerticalAlignCenter" Dense="true" Style="background-color: #1e293b;">
+            @if (ChartLayout == "horizontal" || ChartLayout == "vertical")
+            {
+                <MudSelect T="string" @bind-Value="SelectedChartForAxisEdit" Label="Edit Chart" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-3">
+                    <MudSelectItem Value="@("chart1")">Chart 1</MudSelectItem>
+                    <MudSelectItem Value="@("chart2")">Chart 2</MudSelectItem>
+                    <MudSelectItem Value="@("chart3")">Chart 3</MudSelectItem>
+                    <MudSelectItem Value="@("chart4")">Chart 4</MudSelectItem>
+                    <MudSelectItem Value="@("chart5")">Chart 5</MudSelectItem>
+                    <MudSelectItem Value="@("chart6")">Chart 6</MudSelectItem>
+                    <MudSelectItem Value="@("chart7")">Chart 7</MudSelectItem>
+                    <MudSelectItem Value="@("chart8")">Chart 8</MudSelectItem>
+                </MudSelect>
+            }
+            <MudTextField Value="YAxisName" ValueChanged="(string v) => HandleYAxisNameChangeImmediate(v)" Label="Axis Label" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" Immediate="false" />
+            <MudSelect Value="YAxisNameLocation" ValueChanged="(string v) => { YAxisNameLocation = v; YAxisNameLocationChanged.InvokeAsync(v); }" Label="Label Location" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                <MudSelectItem Value="@("start")">Start</MudSelectItem>
+                <MudSelectItem Value="@("middle")">Middle</MudSelectItem>
+                <MudSelectItem Value="@("end")">End</MudSelectItem>
+            </MudSelect>
+            <MudNumericField Value="YAxisNameGap" ValueChanged="(int v) => { YAxisNameGap = v; YAxisNameGapChanged.InvokeAsync(v); }" Label="Label Gap" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="100" Class="mb-2" />
+            <MudNumericField Value="YAxisNameFontSize" ValueChanged="(int v) => { YAxisNameFontSize = v; YAxisNameFontSizeChanged.InvokeAsync(v); }" Label="Axis Name Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@yAxisNameColorMud" Label="Axis Name Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            <MudNumericField Value="YAxisLabelFontSize" ValueChanged="(int v) => { YAxisLabelFontSize = v; YAxisLabelFontSizeChanged.InvokeAsync(v); }" Label="Label Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@yAxisLabelColorMud" Label="Label Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            <MudSwitch T="bool" Value="YAxisAutoScale" ValueChanged="(bool v) => { YAxisAutoScale = v; YAxisAutoScaleChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Auto Scale" Class="mb-2" />
+            @if (!YAxisAutoScale)
+            {
+                <MudNumericField Value="YAxisMin" ValueChanged="(int v) => { YAxisMin = v; YAxisMinChanged.InvokeAsync(v); }" Label="Minimum" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" />
+                <MudNumericField Value="YAxisMax" ValueChanged="(int v) => { YAxisMax = v; YAxisMaxChanged.InvokeAsync(v); }" Label="Maximum" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" />
+            }
+            <MudSwitch T="bool" Value="YAxisShowTick" ValueChanged="(bool v) => { YAxisShowTick = v; YAxisShowTickChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Tick Marks" Class="mb-2" />
+            <MudNumericField Value="YAxisTickLength" ValueChanged="(int v) => { YAxisTickLength = v; YAxisTickLengthChanged.InvokeAsync(v); }" Label="Tick Length" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="20" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@yAxisTickColorMud" Label="Tick Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            <MudSwitch T="bool" Value="UseLogScale" ValueChanged="(bool v) => { UseLogScale = v; UseLogScaleChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Logarithmic Scale" />
+                </MudExpansionPanel>
+
+                <!-- Y2-Axis -->
+                <MudExpansionPanel Text="Y2-Axis (Secondary)" Icon="@Icons.Material.Filled.VerticalAlignTop" Dense="true" Style="background-color: #1e293b;">
+            @if (ChartLayout == "horizontal" || ChartLayout == "vertical")
+            {
+                <MudSelect T="string" @bind-Value="SelectedChartForAxisEdit" Label="Edit Chart" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-3">
+                    <MudSelectItem Value="@("chart1")">Chart 1</MudSelectItem>
+                    <MudSelectItem Value="@("chart2")">Chart 2</MudSelectItem>
+                    <MudSelectItem Value="@("chart3")">Chart 3</MudSelectItem>
+                    <MudSelectItem Value="@("chart4")">Chart 4</MudSelectItem>
+                    <MudSelectItem Value="@("chart5")">Chart 5</MudSelectItem>
+                    <MudSelectItem Value="@("chart6")">Chart 6</MudSelectItem>
+                    <MudSelectItem Value="@("chart7")">Chart 7</MudSelectItem>
+                    <MudSelectItem Value="@("chart8")">Chart 8</MudSelectItem>
+                </MudSelect>
+            }
+            <MudTextField Value="Y2AxisName" ValueChanged="(string v) => HandleY2AxisNameChangeImmediate(v)" Label="Axis Label" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" Immediate="false" />
+            <MudNumericField Value="Y2AxisNameFontSize" ValueChanged="(int v) => { Y2AxisNameFontSize = v; Y2AxisNameFontSizeChanged.InvokeAsync(v); }" Label="Axis Name Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@y2AxisNameColorMud" Label="Axis Name Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            <MudNumericField Value="Y2AxisLabelFontSize" ValueChanged="(int v) => { Y2AxisLabelFontSize = v; Y2AxisLabelFontSizeChanged.InvokeAsync(v); }" Label="Label Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@y2AxisLabelColorMud" Label="Label Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" />
+                </MudExpansionPanel>
+
+                <!-- Grid & Border -->
+                <MudExpansionPanel Text="Grid & Border" Icon="@Icons.Material.Filled.GridView" Dense="true" Style="background-color: #1e293b;">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2"><strong>Gridlines</strong></MudText>
+                    <MudSwitch T="bool" Value="ShowHorizontalGrid" ValueChanged="(bool v) => { ShowHorizontalGrid = v; ShowHorizontalGridChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Horizontal Gridlines" Class="mb-2" />
+                    @if (ShowHorizontalGrid)
+                    {
+                        <MudNumericField Value="HorizontalGridInterval" ValueChanged="(int v) => { HorizontalGridInterval = v; HorizontalGridIntervalChanged.InvokeAsync(v); }"
+                                         Label="Horizontal Grid Interval"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         Min="0"
+                                         Max="100"
+                                         Class="mb-2"
+                                         HelperText="0 = Auto, or specify interval (e.g., 10 = every 10 units)" />
+                    }
+                    <MudSwitch T="bool" Value="ShowVerticalGrid" ValueChanged="(bool v) => { ShowVerticalGrid = v; ShowVerticalGridChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Vertical Gridlines" Class="mb-2" />
+                    @if (ShowVerticalGrid)
+                    {
+                        <MudNumericField Value="VerticalGridInterval" ValueChanged="(int v) => { VerticalGridInterval = v; VerticalGridIntervalChanged.InvokeAsync(v); }"
+                                         Label="Vertical Grid Interval"
+                                         Variant="Variant.Outlined"
+                                         Margin="Margin.Dense"
+                                         Min="0"
+                                         Max="100"
+                                         Class="mb-3"
+                                         HelperText="0 = Auto, or specify interval (e.g., 5 = every 5 data points)" />
+                    }
+                    <MudColorPicker @bind-Value="@gridLineColorMud" Label="Gridline Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                    <MudNumericField Value="GridLineWidth" ValueChanged="(int v) => { GridLineWidth = v; GridLineWidthChanged.InvokeAsync(v); }" Label="Line Width" Variant="Variant.Outlined" Margin="Margin.Dense" Min="1" Max="5" Class="mb-2" />
+                    <MudSelect Value="GridLineStyle" ValueChanged="(string v) => { GridLineStyle = v; GridLineStyleChanged.InvokeAsync(v); }" Label="Line Style" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-3">
+                        <MudSelectItem Value="@("solid")">Solid</MudSelectItem>
+                        <MudSelectItem Value="@("dashed")">Dashed</MudSelectItem>
+                        <MudSelectItem Value="@("dotted")">Dotted</MudSelectItem>
+                    </MudSelect>
+                    <MudText Typo="Typo.subtitle2" Class="mb-2"><strong>Axis Lines</strong></MudText>
+                    <MudSwitch T="bool" Value="ShowXAxisLine" ValueChanged="(bool v) => { ShowXAxisLine = v; ShowXAxisLineChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show X-Axis Line" Class="mb-2" />
+                    <MudSwitch T="bool" Value="ShowYAxisLine" ValueChanged="(bool v) => { ShowYAxisLine = v; ShowYAxisLineChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Y-Axis Line" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@axisLineColorMud" Label="Axis Line Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                    <MudNumericField Value="AxisLineWidth" ValueChanged="(int v) => { AxisLineWidth = v; AxisLineWidthChanged.InvokeAsync(v); }" Label="Axis Line Width" Variant="Variant.Outlined" Margin="Margin.Dense" Min="1" Max="5" />
+                </MudExpansionPanel>
+
+            </MudExpansionPanels>
+        </MudExpansionPanel>
+
+        <!-- ========== INTERACTION GROUP ========== -->
+        <MudExpansionPanel Text="Interaction" Icon="@Icons.Material.Filled.TouchApp" Dense="true" Style="background-color: #1e293b;">
+            <MudExpansionPanels MultiExpansion="true" Dense="true" Class="pl-2" Style="background-color: #1e293b;">
+
+                <!-- Tooltip -->
+                <MudExpansionPanel Text="Tooltip" Icon="@Icons.Material.Filled.Info" Dense="true" Style="background-color: #1e293b;">
+                    <MudSelect Value="TooltipTrigger" ValueChanged="(string v) => { TooltipTrigger = v; TooltipTriggerChanged.InvokeAsync(v); }" Label="Trigger" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                        <MudSelectItem Value="@("item")">Item</MudSelectItem>
+                        <MudSelectItem Value="@("axis")">Axis</MudSelectItem>
+                        <MudSelectItem Value="@("none")">None</MudSelectItem>
+                    </MudSelect>
+                    <MudSelect Value="TooltipAxisPointerType" ValueChanged="(string v) => { TooltipAxisPointerType = v; TooltipAxisPointerTypeChanged.InvokeAsync(v); }" Label="Axis Pointer Type" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                        <MudSelectItem Value="@("line")">Line</MudSelectItem>
+                        <MudSelectItem Value="@("shadow")">Shadow</MudSelectItem>
+                        <MudSelectItem Value="@("cross")">Cross</MudSelectItem>
+                        <MudSelectItem Value="@("none")">None</MudSelectItem>
+                    </MudSelect>
+                    <MudColorPicker @bind-Value="@tooltipBgColorMud" Label="Background Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@tooltipTextColorMud" Label="Text Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                    <MudColorPicker @bind-Value="@tooltipBorderColorMud" Label="Border Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                    <MudNumericField Value="TooltipBorderWidth" ValueChanged="(int v) => { TooltipBorderWidth = v; TooltipBorderWidthChanged.InvokeAsync(v); }" Label="Border Width" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="5" Class="mb-2" />
+                    <MudNumericField Value="TooltipBorderRadius" ValueChanged="(int v) => { TooltipBorderRadius = v; TooltipBorderRadiusChanged.InvokeAsync(v); }" Label="Border Radius" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="10" Class="mb-2" />
+                    <MudNumericField Value="TooltipPadding" ValueChanged="(int v) => { TooltipPadding = v; TooltipPaddingChanged.InvokeAsync(v); }" Label="Padding" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="20" Class="mb-2" />
+                    <MudNumericField Value="TooltipFontSize" ValueChanged="(int v) => { TooltipFontSize = v; TooltipFontSizeChanged.InvokeAsync(v); }" Label="Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" />
+                </MudExpansionPanel>
+
+                <!-- Data Zoom -->
+                <MudExpansionPanel Text="Data Zoom" Icon="@Icons.Material.Filled.ZoomIn" Dense="true" Style="background-color: #1e293b;">
+                    <MudSwitch T="bool" Value="ShowDataZoomSlider" ValueChanged="(bool v) => { ShowDataZoomSlider = v; ShowDataZoomSliderChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Slider Zoom" Class="mb-2" />
+                    <MudSwitch T="bool" Value="ShowDataZoomInside" ValueChanged="(bool v) => { ShowDataZoomInside = v; ShowDataZoomInsideChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Enable Inside Zoom (Mouse Wheel)" Class="mb-3" />
+
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">Select Charts to Sync Zoom:</MudText>
+                    <MudSwitch T="bool" Value="ZoomSyncChart1" ValueChanged="(bool v) => { ZoomSyncChart1 = v; ZoomSyncChart1Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 1" Class="mb-1" />
+                    <MudSwitch T="bool" Value="ZoomSyncChart2" ValueChanged="(bool v) => { ZoomSyncChart2 = v; ZoomSyncChart2Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 2" Class="mb-1" />
+                    <MudSwitch T="bool" Value="ZoomSyncChart3" ValueChanged="(bool v) => { ZoomSyncChart3 = v; ZoomSyncChart3Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 3" Class="mb-1" />
+                    <MudSwitch T="bool" Value="ZoomSyncChart4" ValueChanged="(bool v) => { ZoomSyncChart4 = v; ZoomSyncChart4Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 4" Class="mb-1" />
+                    <MudSwitch T="bool" Value="ZoomSyncChart5" ValueChanged="(bool v) => { ZoomSyncChart5 = v; ZoomSyncChart5Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 5" Class="mb-1" />
+                    <MudSwitch T="bool" Value="ZoomSyncChart6" ValueChanged="(bool v) => { ZoomSyncChart6 = v; ZoomSyncChart6Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 6" Class="mb-1" />
+                    <MudSwitch T="bool" Value="ZoomSyncChart7" ValueChanged="(bool v) => { ZoomSyncChart7 = v; ZoomSyncChart7Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 7" Class="mb-1" />
+                    <MudSwitch T="bool" Value="ZoomSyncChart8" ValueChanged="(bool v) => { ZoomSyncChart8 = v; ZoomSyncChart8Changed.InvokeAsync(v); }" Color="Color.Primary" Label="Chart 8" Class="mb-3" />
+                    <MudSwitch T="bool" Value="ZoomSyncAllCharts" ValueChanged="(bool v) => { ZoomSyncAllCharts = v; ZoomSyncAllChartsChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Sync All Charts" Class="mb-4" />
+
+                    @if (ShowDataZoomSlider)
+                    {
+                        <MudNumericField Value="DataZoomHeight" ValueChanged="(int v) => { DataZoomHeight = v; DataZoomHeightChanged.InvokeAsync(v); }" Label="Slider Height" Variant="Variant.Outlined" Margin="Margin.Dense" Min="10" Max="50" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@dataZoomBackgroundColorMud" Label="Background Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@dataZoomFillerColorMud" Label="Filler Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@dataZoomBorderColorMud" Label="Border Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" />
+                    }
+                </MudExpansionPanel>
+
+                <!-- Toolbox -->
+                <MudExpansionPanel Text="Toolbox" Icon="@Icons.Material.Filled.Build" Dense="true" Style="background-color: #1e293b;">
+            <MudSwitch T="bool" Value="ShowToolbox" ValueChanged="(bool v) => { ShowToolbox = v; ShowToolboxChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Toolbox" Class="mb-2" />
+            @if (ShowToolbox)
+            {
+                <MudSwitch T="bool" Value="ToolboxShowSaveAsImage" ValueChanged="(bool v) => { ToolboxShowSaveAsImage = v; ToolboxShowSaveAsImageChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Save as Image" Class="mb-2" />
+                <MudSwitch T="bool" Value="ToolboxShowDataZoom" ValueChanged="(bool v) => { ToolboxShowDataZoom = v; ToolboxShowDataZoomChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Data Zoom" Class="mb-2" />
+                <MudSwitch T="bool" Value="ToolboxShowDataView" ValueChanged="(bool v) => { ToolboxShowDataView = v; ToolboxShowDataViewChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Data View" Class="mb-2" />
+                <MudSwitch T="bool" Value="ToolboxShowRestore" ValueChanged="(bool v) => { ToolboxShowRestore = v; ToolboxShowRestoreChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Restore" Class="mb-2" />
+                <MudSwitch T="bool" Value="ToolboxShowMagicType" ValueChanged="(bool v) => { ToolboxShowMagicType = v; ToolboxShowMagicTypeChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Magic Type (Line/Bar)" Class="mb-3" />
+                        <MudColorPicker @bind-Value="@toolboxIconColorMud" Label="Icon Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                        <MudColorPicker @bind-Value="@toolboxEmphasisColorMud" Label="Emphasis Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" />
+                    }
+                </MudExpansionPanel>
+
+            </MudExpansionPanels>
+        </MudExpansionPanel>
+
+        <!-- ========== TITLE ========== -->
+        <MudExpansionPanel Text="Title" Icon="@Icons.Material.Filled.Title" Dense="true" Style="background-color: #1e293b;">
+            <MudSwitch T="bool" Value="ShowTitle" ValueChanged="(bool v) => { ShowTitle = v; ShowTitleChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Title" Class="mb-2" />
+            @if (ShowTitle)
+            {
+                <MudTextField Value="TitleText" ValueChanged="(string v) => { TitleText = v; TitleTextChanged.InvokeAsync(v); }" Label="Title Text" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" />
+                <MudColorPicker @bind-Value="@titleColorMud" Label="Title Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                <MudNumericField Value="TitleFontSize" ValueChanged="(int v) => { TitleFontSize = v; TitleFontSizeChanged.InvokeAsync(v); }" Label="Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="48" Class="mb-2" />
+                <MudSelect Value="TitleFontWeight" ValueChanged="(string v) => { TitleFontWeight = v; TitleFontWeightChanged.InvokeAsync(v); }" Label="Font Weight" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                    <MudSelectItem Value="@("normal")">Normal</MudSelectItem>
+                    <MudSelectItem Value="@("bold")">Bold</MudSelectItem>
+                    <MudSelectItem Value="@("bolder")">Bolder</MudSelectItem>
+                    <MudSelectItem Value="@("lighter")">Lighter</MudSelectItem>
+                </MudSelect>
+                <MudSelect Value="TitleAlignment" ValueChanged="(string v) => { TitleAlignment = v; TitleAlignmentChanged.InvokeAsync(v); }" Label="Alignment" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2">
+                    <MudSelectItem Value="@("left")">Left</MudSelectItem>
+                    <MudSelectItem Value="@("center")">Center</MudSelectItem>
+                    <MudSelectItem Value="@("right")">Right</MudSelectItem>
+                </MudSelect>
+                <MudNumericField Value="TitleTop" ValueChanged="(int v) => { TitleTop = v; TitleTopChanged.InvokeAsync(v); }" Label="Top Position (px)" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="200" Class="mb-2" />
+                <MudNumericField Value="TitleLeft" ValueChanged="(int v) => { TitleLeft = v; TitleLeftChanged.InvokeAsync(v); }" Label="Left Position (%)" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="100" Class="mb-3" />
+            }
+            <MudSwitch T="bool" Value="ShowSubtitle" ValueChanged="(bool v) => { ShowSubtitle = v; ShowSubtitleChanged.InvokeAsync(v); }" Color="Color.Primary" Label="Show Subtitle" Class="mb-2" />
+            @if (ShowSubtitle)
+            {
+                <MudTextField Value="SubtitleText" ValueChanged="(string v) => { SubtitleText = v; SubtitleTextChanged.InvokeAsync(v); }" Label="Subtitle Text" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mb-2" />
+                <MudColorPicker @bind-Value="@subtitleColorMud" Label="Subtitle Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+                <MudNumericField Value="SubtitleFontSize" ValueChanged="(int v) => { SubtitleFontSize = v; SubtitleFontSizeChanged.InvokeAsync(v); }" Label="Font Size" Variant="Variant.Outlined" Margin="Margin.Dense" Min="8" Max="24" />
+            }
+        </MudExpansionPanel>
+
+        <!-- ========== LAYOUT ========== -->
+        <MudExpansionPanel Text="Layout" Icon="@Icons.Material.Filled.Dashboard" Style="background-color: #1e293b;">
+            <MudText Typo="Typo.subtitle2" Class="mb-2"><strong>Plot Area Margins</strong></MudText>
+            <MudNumericField Value="GridTop" ValueChanged="(int v) => { GridTop = v; GridTopChanged.InvokeAsync(v); }" Label="Top Margin" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="200" Class="mb-2" />
+            <MudNumericField Value="GridBottom" ValueChanged="(int v) => { GridBottom = v; GridBottomChanged.InvokeAsync(v); }" Label="Bottom Margin" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="200" Class="mb-2" />
+            <MudNumericField Value="GridLeft" ValueChanged="(int v) => { GridLeft = v; GridLeftChanged.InvokeAsync(v); }" Label="Left Margin" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="200" Class="mb-2" />
+            <MudNumericField Value="GridRight" ValueChanged="(int v) => { GridRight = v; GridRightChanged.InvokeAsync(v); }" Label="Right Margin" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="200" Class="mb-3" />
+            <MudText Typo="Typo.subtitle2" Class="mb-2"><strong>Grid Border</strong></MudText>
+            <MudColorPicker @bind-Value="@gridBorderColorMud" Label="Border Color" Variant="Variant.Outlined" ColorPickerMode="ColorPickerMode.RGB" Class="mb-2" />
+            <MudNumericField Value="GridBorderWidth" ValueChanged="(int v) => { GridBorderWidth = v; GridBorderWidthChanged.InvokeAsync(v); }" Label="Border Width" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="5" />
+        </MudExpansionPanel>
+
+        <!-- ========== ANIMATION ========== -->
+        <MudExpansionPanel Text="Animation" Icon="@Icons.Material.Filled.Animation" Dense="true" Style="background-color: #1e293b;">
+            <MudSlider Value="AnimationDuration" ValueChanged="(int v) => { AnimationDuration = v; AnimationDurationChanged.InvokeAsync(v); }" Min="0" Max="3000" Step="100" Color="Color.Primary" Class="mb-2">
+                Animation Duration: @AnimationDuration ms
+            </MudSlider>
+            <MudSelect Value="AnimationEasing" ValueChanged="(string v) => { AnimationEasing = v; AnimationEasingChanged.InvokeAsync(v); }" Label="Animation Style" Variant="Variant.Outlined" Margin="Margin.Dense">
+                <MudSelectItem Value="@("linear")">Constant Speed</MudSelectItem>
+                <MudSelectItem Value="@("quadraticIn")">Slow Start, Fast End</MudSelectItem>
+                <MudSelectItem Value="@("quadraticOut")">Fast Start, Slow End</MudSelectItem>
+                <MudSelectItem Value="@("cubicIn")">Very Slow Start</MudSelectItem>
+                <MudSelectItem Value="@("cubicOut")">Smooth & Natural (Default)</MudSelectItem>
+                <MudSelectItem Value="@("elasticOut")">Bouncy & Elastic</MudSelectItem>
+                <MudSelectItem Value="@("bounceOut")">Ball Bounce Effect</MudSelectItem>
+            </MudSelect>
+        </MudExpansionPanel>
+
+    </MudExpansionPanels>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex gap-2 mt-2 pt-2" style="border-top: 1px solid #334155;">
+        <MudButton Variant="Variant.Outlined"
+                   Color="Color.Default"
+                   Size="Size.Small"
+                   StartIcon="@Icons.Material.Filled.RestartAlt"
+                   Style="flex: 1;"
+                   OnClick="HandleReset">
+            Reset
+        </MudButton>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Small"
+                   StartIcon="@Icons.Material.Filled.Check"
+                   Style="flex: 1;"
+                   OnClick="HandleApply">
+            Apply
+        </MudButton>
+    </div>
+
+</MudPaper>
+
+@code {
+    [Parameter] public string ChartLayout { get; set; } = "single";
+    [Parameter] public string SelectedChartForAxisEdit { get; set; } = "chart";
+    [Parameter] public EventCallback<string> SelectedChartForAxisEditChanged { get; set; }
+    [Parameter] public EventCallback<(string axisType, string value)> OnAxisNameChanged { get; set; }
+
+    [Parameter] public string ChartTheme { get; set; } = "default";
+    [Parameter] public EventCallback<string> ChartThemeChanged { get; set; }
+    [Parameter] public string ColorPalette { get; set; } = "default";
+    [Parameter] public EventCallback<string> ColorPaletteChanged { get; set; }
+
+    [Parameter] public bool ShowTitle { get; set; }
+    [Parameter] public EventCallback<bool> ShowTitleChanged { get; set; }
+    [Parameter] public string TitleText { get; set; } = "";
+    [Parameter] public EventCallback<string> TitleTextChanged { get; set; }
+    [Parameter] public string TitleColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> TitleColorChanged { get; set; }
+    [Parameter] public int TitleFontSize { get; set; }
+    [Parameter] public EventCallback<int> TitleFontSizeChanged { get; set; }
+    [Parameter] public string TitleFontWeight { get; set; } = "bold";
+    [Parameter] public EventCallback<string> TitleFontWeightChanged { get; set; }
+    [Parameter] public string TitleAlignment { get; set; } = "center";
+    [Parameter] public EventCallback<string> TitleAlignmentChanged { get; set; }
+    [Parameter] public int TitleTop { get; set; }
+    [Parameter] public EventCallback<int> TitleTopChanged { get; set; }
+    [Parameter] public int TitleLeft { get; set; }
+    [Parameter] public EventCallback<int> TitleLeftChanged { get; set; }
+    [Parameter] public List<string>? CustomColors { get; set; }
+    [Parameter] public EventCallback<List<string>> CustomColorsChanged { get; set ;}
+    [Parameter] public bool ShowSubtitle { get; set; }
+    [Parameter] public EventCallback<bool> ShowSubtitleChanged { get; set; }
+    [Parameter] public string SubtitleText { get; set; } = "";
+    [Parameter] public EventCallback<string> SubtitleTextChanged { get; set; }
+    [Parameter] public string SubtitleColor { get; set; } = "#666666";
+    [Parameter] public EventCallback<string> SubtitleColorChanged { get; set; }
+    [Parameter] public int SubtitleFontSize { get; set; }
+    [Parameter] public EventCallback<int> SubtitleFontSizeChanged { get; set; }
+
+    [Parameter] public bool ShowLegend { get; set; }
+    [Parameter] public EventCallback<bool> ShowLegendChanged { get; set; }
+    [Parameter] public string LegendPosition { get; set; } = "top";
+    [Parameter] public EventCallback<string> LegendPositionChanged { get; set; }
+    [Parameter] public string LegendOrient { get; set; } = "horizontal";
+    [Parameter] public EventCallback<string> LegendOrientChanged { get; set; }
+    [Parameter] public int LegendFontSize { get; set; }
+    [Parameter] public EventCallback<int> LegendFontSizeChanged { get; set; }
+    [Parameter] public string LegendTextColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> LegendTextColorChanged { get; set; }
+    [Parameter] public string LegendBackgroundColor { get; set; } = "transparent";
+    [Parameter] public EventCallback<string> LegendBackgroundColorChanged { get; set; }
+    [Parameter] public string LegendBorderColor { get; set; } = "#cccccc";
+    [Parameter] public EventCallback<string> LegendBorderColorChanged { get; set; }
+    [Parameter] public int LegendBorderWidth { get; set; }
+    [Parameter] public EventCallback<int> LegendBorderWidthChanged { get; set; }
+    [Parameter] public int LegendBorderRadius { get; set; }
+    [Parameter] public EventCallback<int> LegendBorderRadiusChanged { get; set; }
+    [Parameter] public int LegendPadding { get; set; }
+    [Parameter] public EventCallback<int> LegendPaddingChanged { get; set; }
+    [Parameter] public int LegendItemGap { get; set; }
+    [Parameter] public EventCallback<int> LegendItemGapChanged { get; set; }
+    [Parameter] public string ChartType { get; set ;} = "line";
+    [Parameter] public EventCallback<string> ChartTypeChanged { get; set; }
+    [Parameter] public string XAxisName { get; set; } = "";
+    [Parameter] public EventCallback<string> XAxisNameChanged { get; set; }
+    [Parameter] public string XAxisNameLocation { get; set; } = "middle";
+    [Parameter] public EventCallback<string> XAxisNameLocationChanged { get; set; }
+    [Parameter] public int XAxisNameGap { get; set; }
+    [Parameter] public EventCallback<int> XAxisNameGapChanged { get; set; }
+    [Parameter] public int XAxisNameFontSize { get; set; }
+    [Parameter] public EventCallback<int> XAxisNameFontSizeChanged { get; set; }
+    [Parameter] public string XAxisNameColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> XAxisNameColorChanged { get; set; }
+    [Parameter] public string XAxisLabelColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> XAxisLabelColorChanged { get; set; }
+    [Parameter] public int XAxisLabelRotate { get; set; }
+    [Parameter] public EventCallback<int> XAxisLabelRotateChanged { get; set; }
+    [Parameter] public int XAxisLabelMargin { get; set; }
+    [Parameter] public EventCallback<int> XAxisLabelMarginChanged { get; set; }
+    [Parameter] public int XAxisTickLength { get; set; }
+    [Parameter] public EventCallback<int> XAxisTickLengthChanged { get; set; }
+    [Parameter] public string XAxisTickColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> XAxisTickColorChanged { get; set; }
+    [Parameter] public string YAxisName { get; set; } = "";
+    [Parameter] public EventCallback<string> YAxisNameChanged { get; set; }
+    [Parameter] public string YAxisNameLocation { get; set; } = "middle";
+    [Parameter] public EventCallback<string> YAxisNameLocationChanged { get; set; }
+    [Parameter] public int YAxisNameGap { get; set; }
+    [Parameter] public EventCallback<int> YAxisNameGapChanged { get; set; }
+    [Parameter] public int YAxisNameFontSize { get; set; }
+    [Parameter] public EventCallback<int> YAxisNameFontSizeChanged { get; set; }
+    [Parameter] public string YAxisNameColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> YAxisNameColorChanged { get; set; }
+    [Parameter] public string YAxisLabelColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> YAxisLabelColorChanged { get; set; }
+    [Parameter] public int YAxisTickLength { get; set; }
+    [Parameter] public EventCallback<int> YAxisTickLengthChanged { get; set; }
+    [Parameter] public string YAxisTickColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> YAxisTickColorChanged { get; set; }
+    [Parameter] public bool YAxisAutoScale { get; set; }
+    [Parameter] public EventCallback<bool> YAxisAutoScaleChanged { get; set; }
+    [Parameter] public int YAxisMin { get; set; }
+    [Parameter] public EventCallback<int> YAxisMinChanged { get; set; }
+    [Parameter] public int YAxisMax { get; set; }
+    [Parameter] public EventCallback<int> YAxisMaxChanged { get; set; }
+
+    [Parameter] public string Y2AxisName { get; set; } = "";
+    [Parameter] public EventCallback<string> Y2AxisNameChanged { get; set; }
+    [Parameter] public int Y2AxisNameFontSize { get; set; }
+    [Parameter] public EventCallback<int> Y2AxisNameFontSizeChanged { get; set; }
+    [Parameter] public string Y2AxisNameColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> Y2AxisNameColorChanged { get; set; }
+    [Parameter] public int Y2AxisLabelFontSize { get; set; }
+    [Parameter] public EventCallback<int> Y2AxisLabelFontSizeChanged { get; set; }
+    [Parameter] public string Y2AxisLabelColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> Y2AxisLabelColorChanged { get; set; }
+
+    [Parameter] public bool ShowXAxisLine { get; set; }
+    [Parameter] public EventCallback<bool> ShowXAxisLineChanged { get; set; }
+    [Parameter] public bool ShowYAxisLine { get; set; }
+    [Parameter] public EventCallback<bool> ShowYAxisLineChanged { get; set; }
+    [Parameter] public string AxisLineColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> AxisLineColorChanged { get; set; }
+    [Parameter] public int AxisLineWidth { get; set; }
+    [Parameter] public EventCallback<int> AxisLineWidthChanged { get; set; }
+
+    [Parameter] public bool ShowHorizontalGrid { get; set; }
+    [Parameter] public EventCallback<bool> ShowHorizontalGridChanged { get; set; }
+    [Parameter] public bool ShowVerticalGrid { get; set; }
+    [Parameter] public EventCallback<bool> ShowVerticalGridChanged { get; set; }
+    [Parameter] public int HorizontalGridInterval { get; set; }
+    [Parameter] public EventCallback<int> HorizontalGridIntervalChanged { get; set; }
+    [Parameter] public int VerticalGridInterval { get; set; }
+    [Parameter] public EventCallback<int> VerticalGridIntervalChanged { get; set; }
+    [Parameter] public string GridLineColor { get; set; } = "#e0e0e0";
+    [Parameter] public EventCallback<string> GridLineColorChanged { get; set; }
+    [Parameter] public int GridLineWidth { get; set; }
+    [Parameter] public EventCallback<int> GridLineWidthChanged { get; set; }
+    [Parameter] public string GridLineStyle { get; set; } = "solid";
+    [Parameter] public EventCallback<string> GridLineStyleChanged { get; set; }
+
+    [Parameter] public string ChartBackgroundColor { get; set; } = "#ffffff";
+    [Parameter] public EventCallback<string> ChartBackgroundColorChanged { get; set; }
+    [Parameter] public string GridBackgroundColor { get; set; } = "transparent";
+    [Parameter] public EventCallback<string> GridBackgroundColorChanged { get; set; }
+    [Parameter] public string LineStyle { get; set; } = "solid";
+    [Parameter] public EventCallback<string> LineStyleChanged { get; set; }
+    [Parameter] public int LineOpacity { get; set; }
+    [Parameter] public EventCallback<int> LineOpacityChanged { get; set; }
+    [Parameter] public int AreaOpacity { get; set; }
+    [Parameter] public EventCallback<int> AreaOpacityChanged { get; set; }
+
+    [Parameter] public bool ShowDataPointMarkers { get; set; }
+    [Parameter] public EventCallback<bool> ShowDataPointMarkersChanged { get; set; }
+    [Parameter] public string SymbolType { get; set; } = "circle";
+    [Parameter] public EventCallback<string> SymbolTypeChanged { get; set; }
+    [Parameter] public int SymbolSize { get; set; }
+    [Parameter] public EventCallback<int> SymbolSizeChanged { get; set; }
+    [Parameter] public bool EnableSmoothLines { get; set; }
+    [Parameter] public EventCallback<bool> EnableSmoothLinesChanged { get; set; }
+
+    [Parameter] public int AnimationDuration { get; set; }
+    [Parameter] public EventCallback<int> AnimationDurationChanged { get; set; }
+    [Parameter] public string AnimationEasing { get; set; } = "cubicOut";
+    [Parameter] public EventCallback<string> AnimationEasingChanged { get; set; }
+
+    [Parameter] public string TooltipTrigger { get; set; } = "axis";
+    [Parameter] public EventCallback<string> TooltipTriggerChanged { get; set; }
+    [Parameter] public string TooltipAxisPointerType { get; set; } = "line";
+    [Parameter] public EventCallback<string> TooltipAxisPointerTypeChanged { get; set; }
+    [Parameter] public string TooltipBackgroundColor { get; set; } = "#ffffff";
+    [Parameter] public EventCallback<string> TooltipBackgroundColorChanged { get; set; }
+    [Parameter] public string TooltipBorderColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> TooltipBorderColorChanged { get; set; }
+    [Parameter] public int TooltipBorderWidth { get; set; }
+    [Parameter] public EventCallback<int> TooltipBorderWidthChanged { get; set; }
+    [Parameter] public int TooltipBorderRadius { get; set; }
+    [Parameter] public EventCallback<int> TooltipBorderRadiusChanged { get; set; }
+    [Parameter] public int TooltipPadding { get; set; }
+    [Parameter] public EventCallback<int> TooltipPaddingChanged { get; set; }
+    [Parameter] public string TooltipTextColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> TooltipTextColorChanged { get; set; }
+    [Parameter] public int TooltipFontSize { get; set; }
+    [Parameter] public EventCallback<int> TooltipFontSizeChanged { get; set; }
+
+    [Parameter] public bool ShowToolbox { get; set; }
+    [Parameter] public EventCallback<bool> ShowToolboxChanged { get; set; }
+    [Parameter] public bool ToolboxShowSaveAsImage { get; set; }
+    [Parameter] public EventCallback<bool> ToolboxShowSaveAsImageChanged { get; set; }
+    [Parameter] public bool ToolboxShowDataZoom { get; set; }
+    [Parameter] public EventCallback<bool> ToolboxShowDataZoomChanged { get; set; }
+    [Parameter] public bool ToolboxShowDataView { get; set; }
+    [Parameter] public EventCallback<bool> ToolboxShowDataViewChanged { get; set; }
+    [Parameter] public bool ToolboxShowRestore { get; set; }
+    [Parameter] public EventCallback<bool> ToolboxShowRestoreChanged { get; set; }
+    [Parameter] public bool ToolboxShowMagicType { get; set; }
+    [Parameter] public EventCallback<bool> ToolboxShowMagicTypeChanged { get; set; }
+    [Parameter] public string ToolboxIconColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> ToolboxIconColorChanged { get; set; }
+    [Parameter] public string ToolboxEmphasisColor { get; set; } = "#20818e";
+    [Parameter] public EventCallback<string> ToolboxEmphasisColorChanged { get; set; }
+
+    [Parameter] public bool ShowDataLabels { get; set; }
+    [Parameter] public EventCallback<bool> ShowDataLabelsChanged { get; set; }
+    [Parameter] public string DataLabelPosition { get; set; } = "top";
+    [Parameter] public EventCallback<string> DataLabelPositionChanged { get; set; }
+    [Parameter] public string DataLabelColor { get; set; } = "#333333";
+    [Parameter] public EventCallback<string> DataLabelColorChanged { get; set; }
+    [Parameter] public int DataLabelFontSize { get; set; }
+    [Parameter] public EventCallback<int> DataLabelFontSizeChanged { get; set; }
+    [Parameter] public string DataLabelFontWeight { get; set; } = "normal";
+    [Parameter] public EventCallback<string> DataLabelFontWeightChanged { get; set; }
+    [Parameter] public string DataLabelBackgroundColor { get; set; } = "transparent";
+    [Parameter] public EventCallback<string> DataLabelBackgroundColorChanged { get; set; }
+    [Parameter] public string DataLabelBorderColor { get; set; } = "transparent";
+    [Parameter] public EventCallback<string> DataLabelBorderColorChanged { get; set; }
+    [Parameter] public int DataLabelBorderWidth { get; set; }
+    [Parameter] public EventCallback<int> DataLabelBorderWidthChanged { get; set; }
+    [Parameter] public int DataLabelBorderRadius { get; set; }
+    [Parameter] public EventCallback<int> DataLabelBorderRadiusChanged { get; set; }
+    [Parameter] public int DataLabelPadding { get; set; }
+    [Parameter] public EventCallback<int> DataLabelPaddingChanged { get; set; }
+    [Parameter] public string DataLabelFormatter { get; set; } = "{c}";
+    [Parameter] public EventCallback<string> DataLabelFormatterChanged { get; set; }
+    [Parameter] public int DataLabelRotate { get; set; }
+    [Parameter] public EventCallback<int> DataLabelRotateChanged { get; set; }
+    [Parameter] public bool DataLabelShowOnHighlight { get; set; }
+    [Parameter] public EventCallback<bool> DataLabelShowOnHighlightChanged { get; set; }
+
+    [Parameter] public int XAxisLabelFontSize { get; set; }
+    [Parameter] public EventCallback<int> XAxisLabelFontSizeChanged { get; set; }
+    [Parameter] public bool XAxisShowTick { get; set; }
+    [Parameter] public EventCallback<bool> XAxisShowTickChanged { get; set; }
+    [Parameter] public int YAxisLabelFontSize { get; set; }
+    [Parameter] public EventCallback<int> YAxisLabelFontSizeChanged { get; set; }
+    [Parameter] public bool YAxisShowTick { get; set; }
+    [Parameter] public EventCallback<bool> YAxisShowTickChanged { get; set; }
+    [Parameter] public bool UseLogScale { get; set; }
+    [Parameter] public EventCallback<bool> UseLogScaleChanged { get; set; }
+
+    [Parameter] public int GridTop { get; set; }
+    [Parameter] public EventCallback<int> GridTopChanged { get; set; }
+    [Parameter] public int GridBottom { get; set; }
+    [Parameter] public EventCallback<int> GridBottomChanged { get; set; }
+    [Parameter] public int GridLeft { get; set; }
+    [Parameter] public EventCallback<int> GridLeftChanged { get; set; }
+    [Parameter] public int GridRight { get; set; }
+    [Parameter] public EventCallback<int> GridRightChanged { get; set; }
+
+    [Parameter] public string GridBorderColor { get; set; } = "#cccccc";
+    [Parameter] public EventCallback<string> GridBorderColorChanged { get; set; }
+    [Parameter] public int GridBorderWidth { get; set; }
+    [Parameter] public EventCallback<int> GridBorderWidthChanged { get; set; }
+
+    [Parameter] public bool ShowDataZoomSlider { get; set; }
+    [Parameter] public EventCallback<bool> ShowDataZoomSliderChanged { get; set; }
+    [Parameter] public bool ShowDataZoomInside { get; set; }
+    [Parameter] public EventCallback<bool> ShowDataZoomInsideChanged { get; set; }
+    [Parameter] public bool ZoomSyncChart1 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart1Changed { get; set; }
+    [Parameter] public bool ZoomSyncChart2 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart2Changed { get; set; }
+    [Parameter] public bool ZoomSyncChart3 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart3Changed { get; set; }
+    [Parameter] public bool ZoomSyncChart4 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart4Changed { get; set; }
+    [Parameter] public bool ZoomSyncChart5 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart5Changed { get; set; }
+    [Parameter] public bool ZoomSyncChart6 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart6Changed { get; set; }
+    [Parameter] public bool ZoomSyncChart7 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart7Changed { get; set; }
+    [Parameter] public bool ZoomSyncChart8 { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncChart8Changed { get; set; }
+    [Parameter] public bool ZoomSyncAllCharts { get; set; }
+    [Parameter] public EventCallback<bool> ZoomSyncAllChartsChanged { get; set; }
+    [Parameter] public int DataZoomHeight { get; set; }
+    [Parameter] public EventCallback<int> DataZoomHeightChanged { get; set; }
+    [Parameter] public string DataZoomBackgroundColor { get; set; } = "#f3f3f3";
+    [Parameter] public EventCallback<string> DataZoomBackgroundColorChanged { get; set; }
+    [Parameter] public string DataZoomFillerColor { get; set; } = "rgba(102, 126, 234, 0.2)";
+    [Parameter] public EventCallback<string> DataZoomFillerColorChanged { get; set; }
+    [Parameter] public string DataZoomBorderColor { get; set; } = "#cccccc";
+    [Parameter] public EventCallback<string> DataZoomBorderColorChanged { get; set; }
+
+    [Parameter] public EventCallback OnApplyClicked { get; set; }
+    [Parameter] public EventCallback OnResetClicked { get; set; }
+
+    private MudBlazor.Utilities.MudColor titleColorMud
+    {
+        get => SafeParseColor(TitleColor, "#333333");
+        set { var colorStr = ColorToString(value); TitleColor = colorStr; TitleColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor gridLineColorMud
+    {
+        get => SafeParseColor(GridLineColor, "#e0e0e0");
+        set { var colorStr = ColorToString(value); GridLineColor = colorStr; GridLineColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor chartBgColorMud
+    {
+        get => SafeParseColor(ChartBackgroundColor, "#ffffff");
+        set { var colorStr = ColorToString(value); ChartBackgroundColor = colorStr; ChartBackgroundColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor gridBgColorMud
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(GridBackgroundColor) ||
+                GridBackgroundColor.Equals("transparent", StringComparison.OrdinalIgnoreCase) ||
+                GridBackgroundColor.Equals("none", StringComparison.OrdinalIgnoreCase))
+            {
+                return new MudBlazor.Utilities.MudColor("#ffffff");
+            }
+            return SafeParseColor(GridBackgroundColor, "#ffffff");
+        }
+        set
+        {
+            var colorStr = ColorToString(value);
+            GridBackgroundColor = colorStr;
+            GridBackgroundColorChanged.InvokeAsync(colorStr);
+        }
+    }
+
+    private MudBlazor.Utilities.MudColor tooltipBgColorMud
+    {
+        get => SafeParseColor(TooltipBackgroundColor, "#ffffff");
+        set { var colorStr = ColorToString(value); TooltipBackgroundColor = colorStr; TooltipBackgroundColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor tooltipBorderColorMud
+    {
+        get => SafeParseColor(TooltipBorderColor, "#333333");
+        set { var colorStr = ColorToString(value); TooltipBorderColor = colorStr; TooltipBorderColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor dataLabelColorMud
+    {
+        get => SafeParseColor(DataLabelColor, "#333333");
+        set { var colorStr = ColorToString(value); DataLabelColor = colorStr; DataLabelColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor subtitleColorMud
+    {
+        get => SafeParseColor(SubtitleColor, "#666666");
+        set { var colorStr = ColorToString(value); SubtitleColor = colorStr; SubtitleColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor legendTextColorMud
+    {
+        get => SafeParseColor(LegendTextColor, "#333333");
+        set { var colorStr = ColorToString(value); LegendTextColor = colorStr; LegendTextColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor legendBackgroundColorMud
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(LegendBackgroundColor) ||
+                LegendBackgroundColor.Equals("transparent", StringComparison.OrdinalIgnoreCase) ||
+                LegendBackgroundColor.Equals("none", StringComparison.OrdinalIgnoreCase))
+            {
+                return new MudBlazor.Utilities.MudColor("#ffffff");
+            }
+            return SafeParseColor(LegendBackgroundColor, "#ffffff");
+        }
+        set
+        {
+            var colorStr = ColorToString(value);
+            LegendBackgroundColor = colorStr;
+            LegendBackgroundColorChanged.InvokeAsync(colorStr);
+        }
+    }
+
+    private MudBlazor.Utilities.MudColor legendBorderColorMud
+    {
+        get => SafeParseColor(LegendBorderColor, "#cccccc");
+        set { var colorStr = ColorToString(value); LegendBorderColor = colorStr; LegendBorderColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor axisLineColorMud
+    {
+        get => SafeParseColor(AxisLineColor, "#333333");
+        set { var colorStr = ColorToString(value); AxisLineColor = colorStr; AxisLineColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor y2AxisNameColorMud
+    {
+        get => SafeParseColor(Y2AxisNameColor, "#333333");
+        set { var colorStr = ColorToString(value); Y2AxisNameColor = colorStr; Y2AxisNameColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor gridBorderColorMud
+    {
+        get => SafeParseColor(GridBorderColor, "#cccccc");
+        set { var colorStr = ColorToString(value); GridBorderColor = colorStr; GridBorderColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor dataLabelBackgroundColorMud
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(DataLabelBackgroundColor) ||
+                DataLabelBackgroundColor.Equals("transparent", StringComparison.OrdinalIgnoreCase) ||
+                DataLabelBackgroundColor.Equals("none", StringComparison.OrdinalIgnoreCase))
+            {
+                return new MudBlazor.Utilities.MudColor("#ffffff");
+            }
+            return SafeParseColor(DataLabelBackgroundColor, "#ffffff");
+        }
+        set
+        {
+            var colorStr = ColorToString(value);
+            DataLabelBackgroundColor = colorStr;
+            DataLabelBackgroundColorChanged.InvokeAsync(colorStr);
+        }
+    }
+
+    private MudBlazor.Utilities.MudColor dataZoomBackgroundColorMud
+    {
+        get => SafeParseColor(DataZoomBackgroundColor, "#f3f3f3");
+        set { var colorStr = ColorToString(value); DataZoomBackgroundColor = colorStr; DataZoomBackgroundColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor dataZoomFillerColorMud
+    {
+        get => SafeParseColor(DataZoomFillerColor, "#20818e33");
+        set { var colorStr = ColorToString(value); DataZoomFillerColor = colorStr; DataZoomFillerColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor dataZoomBorderColorMud
+    {
+        get => SafeParseColor(DataZoomBorderColor, "#cccccc");
+        set { var colorStr = ColorToString(value); DataZoomBorderColor = colorStr; DataZoomBorderColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor tooltipTextColorMud
+    {
+        get => SafeParseColor(TooltipTextColor, "#333333");
+        set { var colorStr = ColorToString(value); TooltipTextColor = colorStr; TooltipTextColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor xAxisNameColorMud
+    {
+        get => SafeParseColor(XAxisNameColor, "#333333");
+        set { var colorStr = ColorToString(value); XAxisNameColor = colorStr; XAxisNameColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor xAxisLabelColorMud
+    {
+        get => SafeParseColor(XAxisLabelColor, "#333333");
+        set { var colorStr = ColorToString(value); XAxisLabelColor = colorStr; XAxisLabelColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor xAxisTickColorMud
+    {
+        get => SafeParseColor(XAxisTickColor, "#333333");
+        set { var colorStr = ColorToString(value); XAxisTickColor = colorStr; XAxisTickColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor yAxisNameColorMud
+    {
+        get => SafeParseColor(YAxisNameColor, "#333333");
+        set { var colorStr = ColorToString(value); YAxisNameColor = colorStr; YAxisNameColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor yAxisLabelColorMud
+    {
+        get => SafeParseColor(YAxisLabelColor, "#333333");
+        set { var colorStr = ColorToString(value); YAxisLabelColor = colorStr; YAxisLabelColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor yAxisTickColorMud
+    {
+        get => SafeParseColor(YAxisTickColor, "#333333");
+        set { var colorStr = ColorToString(value); YAxisTickColor = colorStr; YAxisTickColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor y2AxisLabelColorMud
+    {
+        get => SafeParseColor(Y2AxisLabelColor, "#333333");
+        set { var colorStr = ColorToString(value); Y2AxisLabelColor = colorStr; Y2AxisLabelColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor dataLabelBorderColorMud
+    {
+        get => SafeParseColor(DataLabelBorderColor, "#ffffff");
+        set { var colorStr = ColorToString(value); DataLabelBorderColor = colorStr; DataLabelBorderColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor toolboxIconColorMud
+    {
+        get => SafeParseColor(ToolboxIconColor, "#333333");
+        set { var colorStr = ColorToString(value); ToolboxIconColor = colorStr; ToolboxIconColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor toolboxEmphasisColorMud
+    {
+        get => SafeParseColor(ToolboxEmphasisColor, "#20818e");
+        set { var colorStr = ColorToString(value); ToolboxEmphasisColor = colorStr; ToolboxEmphasisColorChanged.InvokeAsync(colorStr); }
+    }
+
+    private MudBlazor.Utilities.MudColor SafeParseColor(string colorValue, string fallback)
+    {
+        if (string.IsNullOrEmpty(colorValue))
+        {
+            return new MudBlazor.Utilities.MudColor(fallback);
+        }
+
+        if (colorValue.Equals("transparent", StringComparison.OrdinalIgnoreCase) ||
+            colorValue.Equals("none", StringComparison.OrdinalIgnoreCase))
+        {
+            try
+            {
+                var baseColor = new MudBlazor.Utilities.MudColor(fallback);
+                return new MudBlazor.Utilities.MudColor((byte)baseColor.R, (byte)baseColor.G, (byte)baseColor.B, (byte)0);
+            }
+            catch
+            {
+                return new MudBlazor.Utilities.MudColor((byte)255, (byte)255, (byte)255, (byte)0);
+            }
+        }
+
+        if (colorValue.StartsWith("rgba", StringComparison.OrdinalIgnoreCase))
+        {
+            try
+            {
+                var mudColor = new MudBlazor.Utilities.MudColor(colorValue);
+                if (mudColor.A <= 1)
+                {
+                    return mudColor;
+                }
+                return mudColor;
+            }
+            catch
+            {
+                return new MudBlazor.Utilities.MudColor(fallback);
+            }
+        }
+
+        try
+        {
+            return new MudBlazor.Utilities.MudColor(colorValue);
+        }
+        catch
+        {
+            return new MudBlazor.Utilities.MudColor(fallback);
+        }
+    }
+
+    private string ColorToString(MudBlazor.Utilities.MudColor color)
+    {
+        if (color.A <= 1)
+        {
+            return "transparent";
+        }
+
+        if (color.A < 255)
+        {
+            double alpha = Math.Round(color.A / 255.0, 2);
+            return $"rgba({color.R}, {color.G}, {color.B}, {alpha})";
+        }
+
+        return color.Value;
+    }
+
+    private async Task HandleApply()
+    {
+        await OnApplyClicked.InvokeAsync();
+    }
+
+    private async Task HandleReset()
+    {
+        await OnResetClicked.InvokeAsync();
+        await OnApplyClicked.InvokeAsync();
+    }
+
+    private async Task HandleXAxisNameChange()
+    {
+        await XAxisNameChanged.InvokeAsync(XAxisName);
+        await OnAxisNameChanged.InvokeAsync(("X", XAxisName));
+    }
+
+    private async Task HandleYAxisNameChange()
+    {
+        await YAxisNameChanged.InvokeAsync(YAxisName);
+        await OnAxisNameChanged.InvokeAsync(("Y", YAxisName));
+    }
+
+    private async Task HandleXAxisNameChangeImmediate(string value)
+    {
+        XAxisName = value;
+        await XAxisNameChanged.InvokeAsync(value);
+        await OnAxisNameChanged.InvokeAsync(("X", value));
+    }
+
+    private async Task HandleYAxisNameChangeImmediate(string value)
+    {
+        YAxisName = value;
+        await YAxisNameChanged.InvokeAsync(value);
+        await OnAxisNameChanged.InvokeAsync(("Y", value));
+    }
+
+    private async Task HandleY2AxisNameChangeImmediate(string value)
+    {
+        Y2AxisName = value;
+        await Y2AxisNameChanged.InvokeAsync(value);
+        await OnAxisNameChanged.InvokeAsync(("Y2", value));
+    }
+
+    private MudBlazor.Utilities.MudColor customColor1Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 0 ? CustomColors[0] : "#5470c6", "#5470c6");
+    set => UpdateCustomColor(0, value);
+}
+private MudBlazor.Utilities.MudColor customColor2Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 1 ? CustomColors[1] : "#91cc75", "#91cc75");
+    set => UpdateCustomColor(1, value);
+}
+private MudBlazor.Utilities.MudColor customColor3Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 2 ? CustomColors[2] : "#fac858", "#fac858");
+    set => UpdateCustomColor(2, value);
+}
+private MudBlazor.Utilities.MudColor customColor4Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 3 ? CustomColors[3] : "#ee6666", "#ee6666");
+    set => UpdateCustomColor(3, value);
+}
+private MudBlazor.Utilities.MudColor customColor5Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 4 ? CustomColors[4] : "#73c0de", "#73c0de");
+    set => UpdateCustomColor(4, value);
+}
+private MudBlazor.Utilities.MudColor customColor6Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 5 ? CustomColors[5] : "#3ba272", "#3ba272");
+    set => UpdateCustomColor(5, value);
+}
+private MudBlazor.Utilities.MudColor customColor7Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 6 ? CustomColors[6] : "#fc8452", "#fc8452");
+    set => UpdateCustomColor(6, value);
+}
+private MudBlazor.Utilities.MudColor customColor8Mud
+{
+    get => SafeParseColor(CustomColors?.Count > 7 ? CustomColors[7] : "#9a60b4", "#9a60b4");
+    set => UpdateCustomColor(7, value);
+}
+
+private void UpdateCustomColor(int index, MudBlazor.Utilities.MudColor value)
+{
+    var colorStr = ColorToString(value);
+    var newList = (CustomColors ?? new List<string>()).ToList();
+    
+    while (newList.Count <= index)
+    {
+        newList.Add("#5470c6");
+    }
+    
+    newList[index] = colorStr;
+    CustomColors = newList;
+    CustomColorsChanged.InvokeAsync(newList);
+}
+}

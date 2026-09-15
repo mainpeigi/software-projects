@@ -1,0 +1,96 @@
+@inject LocalProfileService AuthService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6" Style="color: #ef4444;">
+            <MudIcon Icon="@Icons.Material.Filled.Warning" Class="mr-2" />
+            Delete Account
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudAlert Severity="Severity.Error" Class="mb-4">
+            This action is permanent and cannot be undone. All your data will be deleted.
+        </MudAlert>
+        
+        <MudText Class="mb-3">The following will be permanently deleted:</MudText>
+        <MudList T="string" Dense="true" Class="mb-4">
+            <MudListItem Icon="@Icons.Material.Filled.Person">Your profile and settings</MudListItem>
+            <MudListItem Icon="@Icons.Material.Filled.FolderOpen">All saved sessions</MudListItem>
+            <MudListItem Icon="@Icons.Material.Filled.DataObject">All uploaded data and snapshots</MudListItem>
+            <MudListItem Icon="@Icons.Material.Filled.Security">Two-factor authentication settings</MudListItem>
+        </MudList>
+
+        <MudText Class="mb-2">Enter your password to confirm:</MudText>
+        <MudTextField @bind-Value="password" 
+                      Label="Password" 
+                      Variant="Variant.Outlined"
+                      InputType="@(showPassword ? InputType.Text : InputType.Password)"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@(showPassword ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                      OnAdornmentClick="() => showPassword = !showPassword"
+                      Class="mb-3" />
+
+        <MudTextField @bind-Value="confirmText" 
+                      Label="Type 'DELETE' to confirm" 
+                      Variant="Variant.Outlined"
+                      Placeholder="DELETE"
+                      Class="mb-3" />
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" 
+                   Variant="Variant.Filled" 
+                   OnClick="ConfirmDelete" 
+                   Disabled="@(!CanDelete || isDeleting)">
+            @if (isDeleting)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+            }
+            Delete My Account
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = null!;
+    [Parameter] public string UserEmail { get; set; } = "";
+
+    private string password = "";
+    private string confirmText = "";
+    private string? errorMessage;
+    private bool showPassword;
+    private bool isDeleting;
+
+    private bool CanDelete => !string.IsNullOrEmpty(password) && confirmText == "DELETE";
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task ConfirmDelete()
+    {
+        if (!CanDelete) return;
+
+        isDeleting = true;
+        errorMessage = null;
+
+        var (success, error) = await AuthService.VerifyPasswordAsync(UserEmail, password);
+        
+        if (success)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            errorMessage = "Incorrect password. Please try again.";
+            password = "";
+        }
+
+        isDeleting = false;
+    }
+}
+

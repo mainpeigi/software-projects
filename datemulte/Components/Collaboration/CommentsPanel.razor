@@ -1,0 +1,124 @@
+@using Datemulte_2.Services
+@using Datemulte_2.Models
+@using MudBlazor
+@inject CommentService CommentService
+@inject PermissionService PermissionService
+@inject LocalProfileService AuthService
+@inject ISnackbar Snackbar
+
+<MudPaper Class="pa-4" Elevation="2">
+    <MudText Typo="Typo.h6" Class="mb-4">Comments</MudText>
+
+    @if (comments.Any())
+    {
+        <MudStack Spacing="3" Class="mb-4">
+            @foreach (var comment in comments)
+            {
+                <EditableSessionCommentCard Comment="@comment"
+                                           CurrentUserId="@currentUserId"
+                                           CanDeleteAny="@isAdmin"
+                                           OnChanged="LoadComments" />
+
+                @if (comment.Replies.Any())
+                {
+                    <MudStack Spacing="2" Class="mt-3">
+                        @foreach (var reply in comment.Replies.OrderBy(r => r.CreatedAt))
+                        {
+                            <EditableSessionCommentCard Comment="@reply"
+                                                       CurrentUserId="@currentUserId"
+                                                       CanDeleteAny="@isAdmin"
+                                                       IsReply="true"
+                                                       OnChanged="LoadComments" />
+                        }
+                    </MudStack>
+                }
+            }
+        </MudStack>
+    }
+    else
+    {
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-4">
+            No comments yet. Be the first to comment!
+        </MudText>
+    }
+
+    <MudDivider Class="my-4"/>
+
+    <MudTextField @bind-Value="newCommentContent"
+                  Label="Add a comment"
+                  Variant="Variant.Outlined"
+                  Lines="3"
+                  Margin="Margin.Dense"
+                  Class="mb-3"
+                  Disabled="@(!canComment)" />
+
+    <MudButton Color="Color.Primary"
+               Variant="Variant.Filled"
+               OnClick="AddComment"
+               Disabled="@(!canComment || string.IsNullOrWhiteSpace(newCommentContent))">
+        Post Comment
+    </MudButton>
+</MudPaper>
+
+@code {
+    [Parameter] public Guid SessionId { get; set; }
+
+    private List<SessionComment> comments = new();
+    private Guid currentUserId;
+    private bool isAdmin = false;
+    private bool canComment = true;
+
+    private string newCommentContent = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthService.CurrentUserId ?? Guid.Empty;
+
+        if (currentUserId != Guid.Empty)
+        {
+            isAdmin = await PermissionService.IsAdminAsync(SessionId, currentUserId);
+            canComment = await PermissionService.CanCommentAsync(SessionId, currentUserId);
+        }
+        else
+        {
+            canComment = false;
+        }
+
+        await LoadComments();
+    }
+
+    private async Task LoadComments()
+    {
+        comments = await CommentService.GetSessionCommentsAsync(SessionId, currentUserId);
+    }
+
+    private async Task AddComment()
+    {
+        if (!canComment)
+        {
+            Snackbar.Add("You don't have permission to comment on this session", Severity.Warning);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newCommentContent))
+            return;
+
+        var (success, message, comment) = await CommentService.AddCommentAsync(
+            SessionId,
+            currentUserId,
+            newCommentContent,
+            null
+        );
+
+        if (success)
+        {
+            Snackbar.Add("Comment added successfully", Severity.Success);
+            newCommentContent = "";
+            await LoadComments();
+        }
+        else
+        {
+            Snackbar.Add($"Failed to add comment: {message}", Severity.Error);
+        }
+    }
+}

@@ -1,0 +1,17 @@
+@page "/api-management"
+@using Datemulte_2.Components.Api
+
+<PageTitle>API Management</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">API Management</MudText>
+
+    <MudTabs>
+        <MudTabPanel Text="API Keys">
+            <ApiKeysManager />
+        </MudTabPanel>
+        <MudTabPanel Text="Webhooks">
+            <WebhookManager />
+        </MudTabPanel>
+    </MudTabs>
+</MudContainer>

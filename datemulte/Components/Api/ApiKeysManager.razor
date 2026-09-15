@@ -1,0 +1,157 @@
+@using Datemulte_2.Services
+@using Datemulte_2.Models
+@using MudBlazor
+@inject ApiKeyService ApiKeyService
+@inject LocalProfileService AuthService
+@inject ISnackbar Snackbar
+
+<MudPaper Class="pa-4" Elevation="2">
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.h6">API Keys</MudText>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OpenCreateDialog">
+            Create New Key
+        </MudButton>
+    </div>
+
+    @if (loading)
+    {
+        <MudProgressLinear Indeterminate="true"/>
+    }
+    else if (apiKeys.Any())
+    {
+        <MudTable Items="@apiKeys" Hover="true" Dense="true">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Key (masked)</MudTh>
+                <MudTh>Created</MudTh>
+                <MudTh>Last Used</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Key">@MaskApiKey(context.KeyHash)</MudTd>
+                <MudTd DataLabel="Created">@context.CreatedAt.ToLocalTime().ToString("g")</MudTd>
+                <MudTd DataLabel="Last Used">
+                    @(context.LastUsedAt?.ToLocalTime().ToString("g") ?? "Never")
+                </MudTd>
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small"
+                                   Color="Color.Error"
+                                   OnClick="@(() => DeleteKey(context.Id))"/>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Color="Color.Secondary">No API keys created yet.</MudText>
+    }
+
+    @if (!string.IsNullOrEmpty(newApiKey))
+    {
+        <MudAlert Severity="Severity.Warning" Class="mt-4">
+            <MudText Typo="Typo.body2" Style="font-weight: 600;">Save this API key - it won't be shown again!</MudText>
+            <MudTextField @bind-Value="newApiKey" ReadOnly="true" Variant="Variant.Outlined" Class="mt-2"/>
+            <MudButton Size="Size.Small" Color="Color.Primary" OnClick="CopyToClipboard" Class="mt-2">
+                Copy to Clipboard
+            </MudButton>
+        </MudAlert>
+    }
+</MudPaper>
+
+@if (showCreateDialog)
+{
+    <MudDialog @bind-IsVisible="showCreateDialog">
+        <DialogContent>
+            <MudText Typo="Typo.h6" Class="mb-4">Create API Key</MudText>
+            
+            <MudTextField @bind-Value="newKeyName"
+                          Label="Key Name"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          HelperText="A descriptive name for this API key"/>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="@(() => showCreateDialog = false)">Cancel</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="CreateKey">Create</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+
+@code {
+    private List<ApiKey> apiKeys = new();
+    private bool loading = true;
+    private bool showCreateDialog = false;
+    private string newKeyName = "";
+    private string newApiKey = "";
+    private Guid currentUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthService.CurrentUserId ?? Guid.Empty;
+        await LoadApiKeys();
+    }
+
+    private async Task LoadApiKeys()
+    {
+        loading = true;
+        apiKeys = await ApiKeyService.GetUserApiKeysAsync(currentUserId);
+        loading = false;
+    }
+
+    private void OpenCreateDialog()
+    {
+        newKeyName = "";
+        newApiKey = "";
+        showCreateDialog = true;
+    }
+
+    private async Task CreateKey()
+    {
+        if (string.IsNullOrWhiteSpace(newKeyName))
+        {
+            Snackbar.Add("Please enter a key name", Severity.Warning);
+            return;
+        }
+
+        var (success, key, message) = await ApiKeyService.CreateApiKeyAsync(currentUserId, newKeyName);
+        
+        if (success && key != null)
+        {
+            newApiKey = key;
+            showCreateDialog = false;
+            Snackbar.Add("API key created successfully", Severity.Success);
+            await LoadApiKeys();
+        }
+        else
+        {
+            Snackbar.Add($"Failed to create API key: {message}", Severity.Error);
+        }
+    }
+
+    private async Task DeleteKey(Guid keyId)
+    {
+        var success = await ApiKeyService.RevokeApiKeyAsync(keyId, currentUserId);
+        
+        if (success)
+        {
+            Snackbar.Add("API key deleted", Severity.Success);
+            await LoadApiKeys();
+        }
+        else
+        {
+            Snackbar.Add($"Failed to delete API key", Severity.Error);
+        }
+    }
+
+    private string MaskApiKey(string keyHash)
+    {
+        return "••••••••••••••••" + keyHash.Substring(Math.Max(0, keyHash.Length - 4));
+    }
+
+    private async Task CopyToClipboard()
+    {
+        Snackbar.Add("API key copied to clipboard", Severity.Success);
+    }
+}

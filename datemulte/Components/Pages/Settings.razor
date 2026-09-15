@@ -1,0 +1,395 @@
+@page "/settings"
+@using Datemulte_2.Services
+@inject PreferencesService PreferencesService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Settings - CSV Data Plotter</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-8">
+    <MudPaper Elevation="3" Class="pa-6" Style="background-color: #1e293b;">
+
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <MudIcon Icon="@Icons.Material.Filled.Settings" Style="font-size: 64px; color: #20818e;" />
+            <MudText Typo="Typo.h3" Style="font-weight: 700; color: #20818e; margin-top: 1rem;">
+                Settings & Preferences
+            </MudText>
+            <MudText Typo="Typo.body1" Style="color: #cbd5e1; margin-top: 0.5rem;">
+                Customize your CSV Data Plotter experience
+            </MudText>
+        </div>
+
+        <MudDivider Class="my-4" />
+
+        <!-- CSV Export Settings -->
+        <MudPaper Elevation="2" Class="pa-4 mb-4" Style="background-color: #1e293b;">
+            <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e;">
+                <MudIcon Icon="@Icons.Material.Filled.FileDownload" Class="mr-2" />
+                CSV Export Options
+            </MudText>
+
+            <MudText Typo="Typo.body2" Class="mb-2">Default Delimiter</MudText>
+            <MudRadioGroup @bind-Value="csvDelimiter" Class="mb-3">
+                <MudRadio Value="@(",")" Color="Color.Primary">Comma (,)</MudRadio>
+                <MudRadio Value="@(";")" Color="Color.Primary">Semicolon (;)</MudRadio>
+                <MudRadio Value="@("\t")" Color="Color.Primary">Tab</MudRadio>
+                <MudRadio Value="@("|")" Color="Color.Primary">Pipe (|)</MudRadio>
+            </MudRadioGroup>
+
+            <MudSwitch @bind-Value="includeHeaderInExport"
+                       Color="Color.Primary"
+                       Label="Include header row in exports"
+                       Class="mb-3" />
+
+            <MudSwitch @bind-Value="exportOnlyVisibleColumns"
+                       Color="Color.Primary"
+                       Label="Export only currently selected/visible columns"
+                       Class="mb-3" />
+        </MudPaper>
+
+        <!-- Data Display Settings -->
+        <MudPaper Elevation="2" Class="pa-4 mb-4" Style="background-color: #1e293b;">
+            <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e;">
+                <MudIcon Icon="@Icons.Material.Filled.TableChart" Class="mr-2" />
+                Data Display
+            </MudText>
+
+            <MudNumericField @bind-Value="decimalPlaces"
+                            Label="Decimal Places for Numbers"
+                            Variant="Variant.Outlined"
+                            Min="0"
+                            Max="10"
+                            Class="mb-3"
+                            HelperText="Number of decimal places to display in charts and tables" />
+
+            <MudSwitch @bind-Value="useScientificNotation"
+                       Color="Color.Primary"
+                       Label="Use scientific notation for large numbers"
+                       Class="mb-3" />
+
+            <MudSwitch @bind-Value="autoDetectDateColumns"
+                       Color="Color.Primary"
+                       Label="Automatically detect and format date columns"
+                       Class="mb-3" />
+        </MudPaper>
+
+        <!-- Performance Settings -->
+        <MudPaper Elevation="2" Class="pa-4 mb-4" Style="background-color: #1e293b;">
+            <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e;">
+                <MudIcon Icon="@Icons.Material.Filled.Speed" Class="mr-2" />
+                Performance
+            </MudText>
+
+            <MudSwitch @bind-Value="enableAutoRefresh"
+                       Color="Color.Primary"
+                       Label="Enable auto-refresh for modified CSV files"
+                       Class="mb-3" />
+
+            <MudNumericField @bind-Value="chartUpdateDebounce"
+                            Label="Chart Update Delay (ms)"
+                            Variant="Variant.Outlined"
+                            Min="0"
+                            Max="2000"
+                            Step="100"
+                            Class="mb-3"
+                            HelperText="Delay before updating charts after parameter changes" />
+
+            <MudSwitch @bind-Value="enableLazyLoading"
+                       Color="Color.Primary"
+                       Label="Enable lazy loading for large datasets"
+                       Class="mb-3" />
+        </MudPaper>
+
+        <!-- Chart Appearance -->
+        <MudPaper Elevation="2" Class="pa-4 mb-4" Style="background-color: #1e293b;">
+            <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e;">
+                <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-2" />
+                Chart Appearance
+            </MudText>
+
+            <MudNumericField @bind-Value="defaultLineWidth"
+                            Label="Default Line Width (px)"
+                            Variant="Variant.Outlined"
+                            Min="1"
+                            Max="10"
+                            Class="mb-3" />
+
+            <MudSwitch @bind-Value="enableChartZoom"
+                       Color="Color.Primary"
+                       Label="Enable chart zoom and pan"
+                       Class="mb-3" />
+        </MudPaper>
+
+        <!-- Storage Management -->
+        <MudPaper Elevation="2" Class="pa-4 mb-4" Style="background-color: #1e293b;">
+            <MudText Typo="Typo.h5" Class="mb-3" Style="color: #20818e;">
+                <MudIcon Icon="@Icons.Material.Filled.Storage" Class="mr-2" />
+                Storage & Cache
+            </MudText>
+
+            <MudText Typo="Typo.body2" Class="mb-3">
+                Local Storage Usage: <strong>@storageUsageKB KB</strong>
+            </MudText>
+
+            <MudSwitch @bind-Value="rememberLastFile"
+                       Color="Color.Primary"
+                       Label="Remember last loaded CSV file"
+                       Class="mb-3" />
+
+            <MudSwitch @bind-Value="cacheCalculatedColumns"
+                       Color="Color.Primary"
+                       Label="Cache calculated column results"
+                       Class="mb-3" />
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Warning"
+                       StartIcon="@Icons.Material.Filled.DeleteSweep"
+                       OnClick="ClearCache"
+                       Class="mt-2">
+                Clear All Cached Data
+            </MudButton>
+        </MudPaper>
+    
+        <!-- Success/Error Messages -->
+        @if (showSuccessMessage)
+        {
+            <MudAlert Severity="Severity.Success" Class="mb-4" Variant="Variant.Filled">
+                <MudText><strong>Success!</strong> Settings saved successfully!</MudText>
+            </MudAlert>
+        }
+
+        @if (showCacheCleared)
+        {
+            <MudAlert Severity="Severity.Info" Class="mb-4" Variant="Variant.Filled">
+                <MudText><strong>Cache Cleared!</strong> All cached data has been removed.</MudText>
+            </MudAlert>
+        }
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 16px; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Large"
+                       StartIcon="@Icons.Material.Filled.Save"
+                       OnClick="SaveSettings">
+                Save Settings
+            </MudButton>
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       Size="Size.Large"
+                       StartIcon="@Icons.Material.Filled.RestartAlt"
+                       OnClick="ResetToDefaults">
+                Reset to Defaults
+            </MudButton>
+
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Error"
+                       Size="Size.Large"
+                       StartIcon="@Icons.Material.Filled.DeleteForever"
+                       OnClick="ClearAllSettings">
+                Clear All Settings
+            </MudButton>
+        </div>
+
+    </MudPaper>
+</MudContainer>
+
+@code {
+    // CSV Export Settings
+    private string csvDelimiter = ",";
+    private bool includeHeaderInExport = true;
+    private bool exportOnlyVisibleColumns = false;
+
+    // Data Display Settings
+    private int decimalPlaces = 2;
+    private bool useScientificNotation = false;
+    private bool autoDetectDateColumns = true;
+
+    // Performance Settings
+    private bool enableAutoRefresh = false;
+    private int chartUpdateDebounce = 300;
+    private bool enableLazyLoading = true;
+
+    // Chart Appearance
+    private int defaultLineWidth = 2;
+    private bool enableChartZoom = true;
+
+    // Storage Management
+    private bool rememberLastFile = true;
+    private bool cacheCalculatedColumns = true;
+    private int storageUsageKB = 0;
+
+    // Unit Preferences
+    private string temperatureUnit = "°C";
+    private string distanceUnit = "m";
+    private string flowUnit = "L/min";
+    private string pressureUnit = "Pa";
+    private string voltageUnit = "V";
+    private string currentUnit = "A";
+    private string powerUnit = "W";
+    private string speedUnit = "m/s";
+    private string forceUnit = "N";
+
+    // UI State
+    private bool showSuccessMessage = false;
+    private bool showCacheCleared = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSettings();
+        await CalculateStorageUsage();
+    }
+
+    private async Task LoadSettings()
+    {
+        var preferences = await PreferencesService.LoadAsync();
+
+        // Map properties from UserPreferences
+        csvDelimiter = preferences.CsvDelimiter ?? ",";
+        includeHeaderInExport = preferences.IncludeHeaderInExport;
+        exportOnlyVisibleColumns = preferences.ExportOnlyVisibleColumns;
+
+        decimalPlaces = preferences.DecimalPlaces;
+        useScientificNotation = preferences.UseScientificNotation;
+        autoDetectDateColumns = preferences.AutoDetectDateColumns;
+
+        enableAutoRefresh = preferences.EnableAutoRefresh;
+        chartUpdateDebounce = preferences.ChartUpdateDebounce;
+        enableLazyLoading = preferences.EnableLazyLoading;
+
+        defaultLineWidth = preferences.DefaultLineWidth;
+        enableChartZoom = preferences.EnableChartZoom;
+
+        rememberLastFile = preferences.RememberLastFile;
+        cacheCalculatedColumns = preferences.CacheCalculatedColumns;
+
+        temperatureUnit = preferences.TemperatureUnit;
+        distanceUnit = preferences.DistanceUnit;
+        flowUnit = preferences.FlowUnit;
+        pressureUnit = preferences.PressureUnit;
+        voltageUnit = preferences.VoltageUnit;
+        currentUnit = preferences.CurrentUnit;
+        powerUnit = preferences.PowerUnit;
+        speedUnit = preferences.SpeedUnit;
+        forceUnit = preferences.ForceUnit;
+    }
+
+    private async Task SaveSettings()
+    {
+        // Load existing preferences first to preserve values not on this page
+        var preferences = await PreferencesService.LoadAsync();
+
+        // Note: IsDarkMode and ThemeColorPreset are preserved from loaded preferences
+        // They should only be changed from the theme settings, not overwritten here
+
+        // CSV Export
+        preferences.CsvDelimiter = csvDelimiter;
+        preferences.IncludeHeaderInExport = includeHeaderInExport;
+        preferences.ExportOnlyVisibleColumns = exportOnlyVisibleColumns;
+
+        // Data Display
+        preferences.DecimalPlaces = decimalPlaces;
+        preferences.UseScientificNotation = useScientificNotation;
+        preferences.AutoDetectDateColumns = autoDetectDateColumns;
+
+        // Performance
+        preferences.EnableAutoRefresh = enableAutoRefresh;
+        preferences.ChartUpdateDebounce = chartUpdateDebounce;
+        preferences.EnableLazyLoading = enableLazyLoading;
+
+        // Chart Appearance
+        preferences.DefaultLineWidth = defaultLineWidth;
+        preferences.EnableChartZoom = enableChartZoom;
+
+        // Storage
+        preferences.RememberLastFile = rememberLastFile;
+        preferences.CacheCalculatedColumns = cacheCalculatedColumns;
+
+        // Unit Preferences
+        preferences.TemperatureUnit = temperatureUnit;
+        preferences.DistanceUnit = distanceUnit;
+        preferences.FlowUnit = flowUnit;
+        preferences.PressureUnit = pressureUnit;
+        preferences.VoltageUnit = voltageUnit;
+        preferences.CurrentUnit = currentUnit;
+        preferences.PowerUnit = powerUnit;
+        preferences.SpeedUnit = speedUnit;
+        preferences.ForceUnit = forceUnit;
+
+        await PreferencesService.SaveAsync(preferences);
+
+        showSuccessMessage = true;
+        showCacheCleared = false;
+        StateHasChanged();
+        await Task.Delay(3000);
+        showSuccessMessage = false;
+        StateHasChanged();
+    }
+
+    private async Task ResetToDefaults()
+    {
+        csvDelimiter = ",";
+        includeHeaderInExport = true;
+        exportOnlyVisibleColumns = false;
+
+        decimalPlaces = 2;
+        useScientificNotation = false;
+        autoDetectDateColumns = true;
+
+        enableAutoRefresh = false;
+        chartUpdateDebounce = 300;
+        enableLazyLoading = true;
+
+        defaultLineWidth = 2;
+        enableChartZoom = true;
+
+        rememberLastFile = true;
+        cacheCalculatedColumns = true;
+        
+        temperatureUnit = "°C";
+        distanceUnit = "m";
+        flowUnit = "L/min";
+        pressureUnit = "Pa";
+        voltageUnit = "V";
+        currentUnit = "A";
+        powerUnit = "W";
+        speedUnit = "m/s";
+        forceUnit = "N";
+
+        await SaveSettings();
+    }
+
+    private async Task ClearCache()
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.clear");
+        storageUsageKB = 0;
+
+        showCacheCleared = true;
+        showSuccessMessage = false;
+        StateHasChanged();
+        await Task.Delay(3000);
+        showCacheCleared = false;
+        StateHasChanged();
+    }
+
+    private async Task ClearAllSettings()
+    {
+        await ClearCache();
+        await ResetToDefaults();
+    }
+
+    private async Task CalculateStorageUsage()
+    {
+        try
+        {
+            var storageString = await JSRuntime.InvokeAsync<string>("getLocalStorageSize");
+            storageUsageKB = System.Text.Encoding.UTF8.GetByteCount(storageString) / 1024;
+        }
+        catch
+        {
+            storageUsageKB = 0;
+        }
+    }
+
+}

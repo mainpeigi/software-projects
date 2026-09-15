@@ -1,0 +1,220 @@
+@using Datemulte_2.Services
+@using Datemulte_2.Models
+@using MudBlazor
+@using System.Text.Json
+@inject WebhookService WebhookService
+@inject LocalProfileService AuthService
+@inject ISnackbar Snackbar
+
+<MudPaper Class="pa-4" Elevation="2">
+    <div class="d-flex justify-space-between align-center mb-4">
+        <MudText Typo="Typo.h6">Webhooks</MudText>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="OpenCreateDialog">
+            Create New Webhook
+        </MudButton>
+    </div>
+
+    @if (loading)
+    {
+        <MudProgressLinear Indeterminate="true"/>
+    }
+    else if (webhooks.Any())
+    {
+        <MudTable Items="@webhooks" Hover="true" Dense="true">
+            <HeaderContent>
+                <MudTh>Event Types</MudTh>
+                <MudTh>URL</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>Last Triggered</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Event Types">@GetEventTypesDisplay(context.EventsJson)</MudTd>
+                <MudTd DataLabel="URL">@TruncateUrl(context.Url)</MudTd>
+                <MudTd DataLabel="Status">
+                    <MudChip T="string" Size="Size.Small" Color="@(context.IsActive ? Color.Success : Color.Default)">
+                        @(context.IsActive ? "Active" : "Inactive")
+                    </MudChip>
+                </MudTd>
+                <MudTd DataLabel="Last Triggered">
+                    @(context.LastTriggeredAt?.ToLocalTime().ToString("g") ?? "Never")
+                </MudTd>
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@(context.IsActive ? Icons.Material.Filled.Pause : Icons.Material.Filled.PlayArrow)"
+                                   Size="Size.Small"
+                                   Color="Color.Info"
+                                   OnClick="@(() => ToggleWebhook(context.Id, context.IsActive))"/>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small"
+                                   Color="Color.Error"
+                                   OnClick="@(() => DeleteWebhook(context.Id))"/>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+    else
+    {
+        <MudText Color="Color.Secondary">No webhooks configured yet.</MudText>
+    }
+</MudPaper>
+
+@if (showCreateDialog)
+{
+    <MudDialog @bind-IsVisible="showCreateDialog">
+        <DialogContent>
+            <MudText Typo="Typo.h6" Class="mb-4">Create Webhook</MudText>
+            
+            <MudTextField @bind-Value="newWebhookUrl"
+                          Label="Webhook URL"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Class="mb-3"
+                          HelperText="The endpoint that will receive POST requests"/>
+
+            <MudText Typo="Typo.subtitle2" Class="mb-2">Select Events</MudText>
+            
+            <MudCheckBox @bind-Value="eventSessionCreated" Label="Session Created"/>
+            <MudCheckBox @bind-Value="eventSessionUpdated" Label="Session Updated"/>
+            <MudCheckBox @bind-Value="eventSessionDeleted" Label="Session Deleted"/>
+            <MudCheckBox @bind-Value="eventDataChanged" Label="Data Changed"/>
+            <MudCheckBox @bind-Value="eventSessionShared" Label="Session Shared"/>
+            <MudCheckBox @bind-Value="eventCommentAdded" Label="Comment Added"/>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="@(() => showCreateDialog = false)">Cancel</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="CreateWebhook">Create</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+
+@code {
+    private List<Webhook> webhooks = new();
+    private bool loading = true;
+    private bool showCreateDialog = false;
+    private string newWebhookUrl = "";
+    private Guid currentUserId;
+
+    private bool eventSessionCreated = false;
+    private bool eventSessionUpdated = false;
+    private bool eventSessionDeleted = false;
+    private bool eventDataChanged = false;
+    private bool eventSessionShared = false;
+    private bool eventCommentAdded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserId = AuthService.CurrentUserId ?? Guid.Empty;
+        await LoadWebhooks();
+    }
+
+    private async Task LoadWebhooks()
+    {
+        loading = true;
+        webhooks = await WebhookService.GetUserWebhooksAsync(currentUserId);
+        loading = false;
+    }
+
+    private void OpenCreateDialog()
+    {
+        newWebhookUrl = "";
+        eventSessionCreated = false;
+        eventSessionUpdated = false;
+        eventSessionDeleted = false;
+        eventDataChanged = false;
+        eventSessionShared = false;
+        eventCommentAdded = false;
+        showCreateDialog = true;
+    }
+
+    private async Task CreateWebhook()
+    {
+        if (string.IsNullOrWhiteSpace(newWebhookUrl))
+        {
+            Snackbar.Add("Please enter a webhook URL", Severity.Warning);
+            return;
+        }
+
+        if (!Uri.TryCreate(newWebhookUrl, UriKind.Absolute, out _))
+        {
+            Snackbar.Add("Please enter a valid URL", Severity.Warning);
+            return;
+        }
+
+        var selectedEvents = new List<WebhookEventType>();
+        if (eventSessionCreated) selectedEvents.Add(WebhookEventType.SessionCreated);
+        if (eventSessionUpdated) selectedEvents.Add(WebhookEventType.SessionUpdated);
+        if (eventSessionDeleted) selectedEvents.Add(WebhookEventType.SessionDeleted);
+        if (eventDataChanged) selectedEvents.Add(WebhookEventType.DataChanged);
+        if (eventSessionShared) selectedEvents.Add(WebhookEventType.SessionShared);
+        if (eventCommentAdded) selectedEvents.Add(WebhookEventType.CommentAdded);
+
+        if (!selectedEvents.Any())
+        {
+            Snackbar.Add("Please select at least one event type", Severity.Warning);
+            return;
+        }
+
+        var (success, webhook, message) = await WebhookService.CreateWebhookAsync(
+            currentUserId,
+            newWebhookUrl,
+            selectedEvents.ToArray()
+        );
+
+        if (success)
+        {
+            showCreateDialog = false;
+            Snackbar.Add("Webhook created successfully", Severity.Success);
+            await LoadWebhooks();
+        }
+        else
+        {
+            Snackbar.Add($"Failed to create webhook: {message}", Severity.Error);
+        }
+    }
+
+    private async Task ToggleWebhook(Guid webhookId, bool currentStatus)
+    {
+        var webhook = webhooks.FirstOrDefault(w => w.Id == webhookId);
+        if (webhook != null)
+        {
+            webhook.IsActive = !currentStatus;
+            Snackbar.Add($"Webhook {(!currentStatus ? "activated" : "deactivated")}", Severity.Success);
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteWebhook(Guid webhookId)
+    {
+        var success = await WebhookService.DeleteWebhookAsync(webhookId, currentUserId);
+
+        if (success)
+        {
+            Snackbar.Add("Webhook deleted", Severity.Success);
+            await LoadWebhooks();
+        }
+        else
+        {
+            Snackbar.Add("Failed to delete webhook", Severity.Error);
+        }
+    }
+
+    private string GetEventTypesDisplay(string eventsJson)
+    {
+        try
+        {
+            var events = JsonSerializer.Deserialize<List<WebhookEventType>>(eventsJson);
+            return events != null && events.Any() 
+                ? string.Join(", ", events.Select(e => e.ToString())) 
+                : "None";
+        }
+        catch
+        {
+            return "Unknown";
+        }
+    }
+
+    private string TruncateUrl(string url)
+    {
+        return url.Length > 50 ? url.Substring(0, 47) + "..." : url;
+    }
+}

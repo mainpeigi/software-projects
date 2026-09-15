@@ -1,0 +1,221 @@
+@page "/share/invite/{InviteToken}"
+@using Datemulte_2.Models
+@using Datemulte_2.Services
+@using Datemulte_2.Data
+@using Microsoft.EntityFrameworkCore
+@using MudBlazor
+@inject IDbContextFactory<DataManagementDbContext> DbContextFactory
+@inject SessionSharingService SharingService
+@inject LocalProfileService AuthService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>Accept Invitation</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="pa-4">
+    @if (isLoading)
+    {
+        <MudProgressLinear Indeterminate="true" />
+        <MudText>Processing Invitation...</MudText>
+    }
+    else if (showEmailMismatch)
+    {
+        <MudAlert Severity="Severity.Warning" Class="mb-4">
+            This invitation was sent to <strong>@invitationEmail</strong>, but you are currently logged in as <strong>@currentUserEmail</strong>.
+        </MudAlert>
+        <MudText Class="mb-4">Would you like to:</MudText>
+        <MudStack Row="true" Spacing="2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@LogoutAndRedirect">
+                Log out and sign in with @invitationEmail
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@AcceptAnyway">
+                Accept with current account (@currentUserEmail)
+            </MudButton>
+        </MudStack>
+    }
+    else if (errorMessage != null)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4">
+            @errorMessage
+        </MudAlert>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/">
+            Go to Home
+        </MudButton>
+    }
+    else if (successMessage != null)
+    {
+        <MudAlert Severity="Severity.Success" Class="mb-4">
+            @successMessage
+        </MudAlert>
+         @if (sessionId.HasValue)
+        {
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/csv-plotter/{sessionId.Value}")">
+                Go to Session
+            </MudButton>
+        }
+
+    }
+</MudContainer>
+
+@code{
+    [Parameter] public string InviteToken { get; set; } = "";
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string? successMessage;
+    private Guid? sessionId;
+    private bool showEmailMismatch = false;
+    private string? invitationEmail;
+    private string? currentUserEmail;
+    private bool bypassEmailCheck = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ProcessInvitation();
+    }
+
+    private async Task LogoutAndRedirect()
+    {
+        await AuthService.SignOutAsync();
+        Navigation.NavigateTo($"/login?returnUrl=/share/invite/{InviteToken}", forceLoad: true);
+    }
+
+    private async Task AcceptAnyway()
+    {
+        bypassEmailCheck = true;
+        showEmailMismatch = false;
+        isLoading = true;
+        StateHasChanged();
+        await ProcessInvitation();
+    }
+
+    private async Task ProcessInvitation()
+    {
+        try
+        {
+            await AuthService.InitializedAsync();
+            if (!AuthService.IsAuthenticated || !AuthService.CurrentUserId.HasValue)
+            {
+                Navigation.NavigateTo($"/login?returnUrl=/share/invite/{InviteToken}", forceLoad: true);
+                return;
+            }
+
+            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+
+            var invitation = await dbContext.SessionInvitations.FirstOrDefaultAsync(i => i.InviteToken == InviteToken && !i.Accepted);
+
+            // Check if current user's email matches the invitation email
+            if (invitation != null && !bypassEmailCheck)
+            {
+                currentUserEmail = AuthService.GetUserEmail();
+                invitationEmail = invitation.Email;
+
+                if (!string.IsNullOrEmpty(invitationEmail) &&
+                    !string.IsNullOrEmpty(currentUserEmail) &&
+                    !string.Equals(invitationEmail, currentUserEmail, StringComparison.OrdinalIgnoreCase))
+                {
+                    showEmailMismatch = true;
+                    isLoading = false;
+                    return;
+                }
+            }
+
+            if (invitation == null)
+            {
+                errorMessage = "This invitation is invalid or has already been used";
+                isLoading = false;
+                return;
+            }
+
+            // Get the session to find the owner (who shared it)
+            var session = await dbContext.DataSessions
+                .FirstOrDefaultAsync(s => s.SessionId == invitation.SessionId);
+
+            if (session == null)
+            {
+                errorMessage = "Session not found";
+                isLoading = false;
+                return;
+            }
+
+            var userId = AuthService.CurrentUserId.Value;
+
+            // Ensure accepting user's profile exists before creating share
+            var userProfile = await dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (userProfile == null)
+            {
+                var email = AuthService.GetUserEmail();
+                userProfile = new UserProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    DisplayName = email?.Split('@')[0] ?? "User",
+                    Email = email,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                dbContext.UserProfiles.Add(userProfile);
+                await dbContext.SaveChangesAsync();
+            }
+
+            // Ensure session owner's profile exists (required for foreign key)
+            var ownerProfile = await dbContext.UserProfiles.FirstOrDefaultAsync(u => u.UserId == session.UserId);
+            if (ownerProfile == null)
+            {
+                ownerProfile = new UserProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = session.UserId,
+                    DisplayName = "Session Owner",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                dbContext.UserProfiles.Add(ownerProfile);
+                await dbContext.SaveChangesAsync();
+            }
+
+            // Check if user already has access to this session
+            var existingShare = await dbContext.SessionShares
+                .FirstOrDefaultAsync(s => s.SessionId == invitation.SessionId && s.SharedWithUserId == userId);
+
+            if (existingShare != null)
+            {
+                // User already has access - just mark invitation as accepted
+                invitation.Accepted = true;
+                invitation.AcceptedByUserId = userId;
+                await dbContext.SaveChangesAsync();
+
+                sessionId = invitation.SessionId;
+                successMessage = "You already have access to this session.";
+                isLoading = false;
+                return;
+            }
+
+            invitation.Accepted = true;
+            invitation.AcceptedByUserId = userId;
+
+            var share = new SessionShare
+            {
+                Id = Guid.NewGuid(),
+                SessionId = invitation.SessionId,
+                SharedByUserId = session.UserId,
+                SharedWithUserId = userId,
+                Permission = invitation.Permission,
+                SharedAt = DateTime.UtcNow
+            };
+
+            dbContext.SessionShares.Add(share);
+            await dbContext.SaveChangesAsync();
+
+            sessionId = invitation.SessionId;
+            successMessage = "Invitation accepted! You now have access to the shared session.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error processing invitation: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

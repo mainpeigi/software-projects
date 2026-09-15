@@ -1,0 +1,157 @@
+@using Datemulte_2.Models
+@using Datemulte_2.Services
+@using MudBlazor
+@inject CommentService CommentService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudPaper Class="@GetContainerClass()" Outlined="true">
+    <div class="d-flex justify-space-between align-center mb-2">
+        <MudText Typo="Typo.body2" Style="font-weight: 600;">
+            @GetAuthorDisplayName()
+        </MudText>
+        <MudText Typo="Typo.caption" Color="Color.Secondary">
+            @Comment.CreatedAt.ToLocalTime().ToString("g")
+            @if (Comment.EditedAt.HasValue)
+            {
+                <span> (edited)</span>
+            }
+        </MudText>
+    </div>
+
+    @if (_isEditing)
+    {
+        <MudTextField @bind-Value="_editText"
+                      Label="Edit comment"
+                      Variant="Variant.Outlined"
+                      Lines="3"
+                      Margin="Margin.Dense"
+                      AutoFocus="true"
+                      Class="mb-2" />
+
+        <MudStack Row="true" Spacing="2">
+            <MudButton Color="Color.Primary"
+                       Variant="Variant.Filled"
+                       Size="Size.Small"
+                       OnClick="SaveEdit"
+                       Disabled="string.IsNullOrWhiteSpace(_editText)">
+                Save
+            </MudButton>
+            <MudButton Color="Color.Default"
+                       Variant="Variant.Outlined"
+                       Size="Size.Small"
+                       OnClick="CancelEdit">
+                Cancel
+            </MudButton>
+        </MudStack>
+    }
+    else
+    {
+        <MudText Typo="Typo.body2" Class="mb-2" Style="white-space: pre-wrap;">
+            @Comment.CommentText
+        </MudText>
+
+        @if (CanEdit || CanDelete)
+        {
+            <div class="mt-2">
+                @if (CanEdit)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                   Size="Size.Small"
+                                   Color="Color.Primary"
+                                   OnClick="StartEdit" />
+                }
+
+                @if (CanDelete)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small"
+                                   Color="Color.Error"
+                                   OnClick="ConfirmDelete" />
+                }
+            </div>
+        }
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public SessionComment Comment { get; set; } = null!;
+    [Parameter] public Guid CurrentUserId { get; set; }
+    [Parameter] public bool CanDeleteAny { get; set; } = false;
+    [Parameter] public bool IsReply { get; set; } = false;
+    [Parameter] public EventCallback OnChanged { get; set; }
+
+    private bool _isEditing;
+    private string _editText = string.Empty;
+
+    private bool CanEdit => Comment.UserId == CurrentUserId;
+    private bool CanDelete => CanEdit || CanDeleteAny;
+
+    private string GetContainerClass()
+    {
+        // Keep styles consistent with existing CommentsPanel layout
+        return IsReply ? "pa-2 ml-4" : "pa-3";
+    }
+
+    private string GetAuthorDisplayName()
+    {
+        return Comment.User?.DisplayName ?? Comment.UserId.ToString();
+    }
+
+    private void StartEdit()
+    {
+        _isEditing = true;
+        _editText = Comment.CommentText;
+    }
+
+    private void CancelEdit()
+    {
+        _isEditing = false;
+        _editText = string.Empty;
+    }
+
+    private async Task SaveEdit()
+    {
+        var newText = _editText?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(newText))
+        {
+            CancelEdit();
+            return;
+        }
+
+        var (success, message) = await CommentService.UpdateCommentAsync(Comment.Id, CurrentUserId, newText);
+        if (success)
+        {
+            Snackbar.Add("Comment updated", Severity.Success);
+            CancelEdit();
+            await OnChanged.InvokeAsync();
+        }
+        else
+        {
+            Snackbar.Add($"Failed to update comment: {message}", Severity.Error);
+        }
+    }
+
+    private async Task ConfirmDelete()
+    {
+        var result = await DialogService.ShowMessageBox(
+            "Delete comment",
+            "Are you sure you want to delete this comment?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (result != true)
+            return;
+
+        var (success, message) = await CommentService.DeleteCommentAsync(Comment.Id, CurrentUserId);
+        if (success)
+        {
+            Snackbar.Add("Comment deleted", Severity.Success);
+            await OnChanged.InvokeAsync();
+        }
+        else
+        {
+            Snackbar.Add($"Failed to delete comment: {message}", Severity.Error);
+        }
+    }
+}

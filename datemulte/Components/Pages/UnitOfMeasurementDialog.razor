@@ -1,0 +1,156 @@
+@using MudBlazor
+
+<MudDialog @bind-Visible="@IsVisible"
+           Options="new DialogOptions {
+               CloseButton = false,
+               BackdropClick = false,
+               FullWidth = true,
+               MaxWidth = MaxWidth.Large
+           }"
+           Style="background-color: #1e293b;">
+    <TitleContent>
+        <div style="background-color: #1e293b; color: #e2e8f0; padding: 20px 24px;">
+            <MudText Typo="Typo.h6" Style="color: #e2e8f0;">
+                <MudIcon Icon="@Icons.Material.Filled.Settings" Class="mr-2" Color="Color.Info" />
+                Unit of Measurement Configuration
+            </MudText>
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <div style="background-color: #1e293b; color: #e2e8f0; padding: 24px;">
+            <MudText Typo="Typo.body1" Class="mb-4" Style="color: #e2e8f0;">
+                We've detected the following units of measurement from your CSV file.
+                You can use these detected units or edit them for any column.
+            </MudText>
+
+            @if (EditableColumnUnits != null && EditableColumnUnits.Any())
+            {
+                <div style="border: 1px solid #334155; border-radius: 4px; padding: 12px; margin-bottom: 16px; background-color: #0f172a; max-height: 400px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem; color: #e2e8f0;">
+                        <thead style="background-color: #1e293b;">
+                            <tr>
+                                <th style="color: #cbd5e1; font-weight: 600; padding: 8px; text-align: left; border-bottom: 1px solid #334155; width: 40%;">Column Name</th>
+                                <th style="color: #cbd5e1; font-weight: 600; padding: 8px; text-align: left; border-bottom: 1px solid #334155; width: 30%;">Detected Unit</th>
+                                <th style="color: #cbd5e1; font-weight: 600; padding: 8px; text-align: left; border-bottom: 1px solid #334155; width: 30%;">Edit Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var column in EditableColumnUnits.Keys.OrderBy(k => k))
+                            {
+                                <tr style="color: #e2e8f0; background-color: #0f172a;">
+                                    <td style="color: #e2e8f0; padding: 8px; border-bottom: 1px solid #334155;">@column</td>
+                                    <td style="color: #e2e8f0; padding: 8px; border-bottom: 1px solid #334155;">
+                                        @if (!string.IsNullOrWhiteSpace(EditableColumnUnits[column]))
+                                        {
+                                            <MudChip T="string" Size="Size.Small" Color="Color.Primary">
+                                                @EditableColumnUnits[column]
+                                            </MudChip>
+                                        }
+                                        else
+                                        {
+                                            <MudChip T="string" Size="Size.Small" Color="Color.Default">
+                                                <em>No unit detected</em>
+                                            </MudChip>
+                                        }
+                                    </td>
+                                    <td style="padding: 8px; border-bottom: 1px solid #334155;">
+                                        <MudTextField @bind-Value="EditableColumnUnits[column]"
+                                                      Variant="Variant.Outlined"
+                                                      Margin="Margin.Dense"
+                                                      Placeholder="Enter unit (e.g., °C, m/s)"
+                                                      Clearable="true"
+                                                      DebounceInterval="300"
+                                                      Style="max-width: 200px;" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <MudText Typo="Typo.body2" Style="color: #cbd5e1;">
+                    <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" />
+                    Tip: Common units include °C, °F, m, cm, mm, L/min, Pa, kPa, V, A, W, kg, etc.
+                </MudText>
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Warning">
+                    No columns with units were detected in your CSV file.
+                </MudAlert>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <div style="background-color: #1e293b; padding: 16px 24px; width: 100%;">
+            <MudButton OnClick="OnCancel" Color="Color.Default" Variant="Variant.Text" Style="color: #94a3b8;">
+                Cancel
+            </MudButton>
+            <MudButton OnClick="OnUseDetectedUnits" Color="Color.Info" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AutoAwesome">
+                Use Detected Units
+            </MudButton>
+            <MudButton OnClick="OnApplyEditedUnits" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check">
+                Apply Edited Units
+            </MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public Dictionary<string, string>? OriginalColumnUnits { get; set; }
+
+    [Parameter]
+    public EventCallback<Dictionary<string, string>> OnUnitsConfirmed { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancelled { get; set; }
+
+    private Dictionary<string, string> EditableColumnUnits { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        // Create a working copy of the units that can be edited
+        if (OriginalColumnUnits != null)
+        {
+            EditableColumnUnits = new Dictionary<string, string>(OriginalColumnUnits);
+        }
+    }
+
+    private async Task OnUseDetectedUnits()
+    {
+        if (OriginalColumnUnits != null)
+        {
+            await OnUnitsConfirmed.InvokeAsync(new Dictionary<string, string>(OriginalColumnUnits));
+        }
+        await CloseDialog();
+    }
+
+    private async Task OnApplyEditedUnits()
+    {
+        var cleanedUnits = EditableColumnUnits
+            .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Trim());
+
+        await OnUnitsConfirmed.InvokeAsync(cleanedUnits);
+        await CloseDialog();
+    }
+
+    private async Task OnCancel()
+    {
+        await OnCancelled.InvokeAsync();
+        await CloseDialog();
+    }
+
+    private async Task CloseDialog()
+    {
+        IsVisible = false;
+        await IsVisibleChanged.InvokeAsync(false);
+    }
+}

@@ -1,0 +1,188 @@
+@inherits LayoutComponentBase
+@using Datemulte_2.Components.Notifications
+@using MudBlazor
+@inject LocalProfileService AuthService
+@inject UserProfileService ProfileService
+@implements IDisposable
+
+<MudThemeProvider Theme="@_theme" IsDarkMode="true" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudDrawer @bind-Open="@_drawerOpen" Elevation="4" Variant="DrawerVariant.Persistent" ClipMode="DrawerClipMode.Always">
+        <MudDrawerHeader Style="background: linear-gradient(135deg, #20818e 0%, #06b6d4 100%); padding: 24px 16px; margin: 0;">
+            <MudText Typo="Typo.h5" Style="color: white; font-weight: 700; letter-spacing: -0.5px;">
+                <MudIcon Icon="@Icons.Material.Filled.BarChart" Style="vertical-align: bottom; margin-right: 12px; font-size: 28px; horizontal-align: middle;" />
+                Datemulte
+            </MudText>
+        </MudDrawerHeader>
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+                Home
+            </MudNavLink>
+            <MudNavLink Href="/csv-plotter" Icon="@Icons.Material.Filled.ShowChart">
+                Datemulte
+            </MudNavLink>
+            <MudNavLink Href="/about" Icon="@Icons.Material.Filled.Info">
+                About
+            </MudNavLink>
+            <MudNavLink Href="/settings" Icon="@Icons.Material.Filled.Settings">
+                Settings
+            </MudNavLink>
+            <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.AccountCircle">
+                Profile
+            </MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudAppBar Elevation="2" Dense="true">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" @onclick="ToggleDrawer" />
+            <MudSpacer />
+            <MudText Typo="Typo.body2" Class="mr-3">Local edition</MudText>
+            @if (AuthService.IsAuthenticated)
+            {
+                <div class="d-flex align-center gap-2 mr-2">
+                    <MudText Typo="Typo.body2" Style="color: #cbd5e1;">@_displayName</MudText>
+                    <MudAvatar Size="Size.Small" Style="width: 32px; height: 32px; cursor: pointer;" Href="/profile">
+                        @if (!string.IsNullOrEmpty(_avatarUrl))
+                        {
+                            <MudImage Src="@_avatarUrl" Alt="Avatar" Style="width: 100%; height: 100%; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Small" />
+                        }
+                    </MudAvatar>
+                </div>
+            }
+        </MudAppBar>
+
+        <MudContainer MaxWidth="MaxWidth.False" Class="pa-4" Style="min-height: 100vh;">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+<MudScrollToTop>
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.ArrowUpward" />
+</MudScrollToTop>
+
+@code {
+    private bool _drawerOpen = true;
+    private string _displayName = "";
+    private string? _avatarUrl;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        AuthService.OnAuthStateChanged += OnAuthStateChanged;
+        ProfileService.OnProfileChanged += OnProfileChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await AuthService.InitializedAsync();
+            await LoadUserProfile();
+            StateHasChanged();
+        }
+    }
+
+    private async void OnAuthStateChanged()
+    {
+        await LoadUserProfile();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void OnProfileChanged()
+    {
+        await LoadUserProfile();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadUserProfile()
+    {
+        if (AuthService.IsAuthenticated && AuthService.CurrentUserId.HasValue)
+        {
+            var profile = await ProfileService.GetProfileAsync(AuthService.CurrentUserId.Value);
+            _displayName = profile?.DisplayName ?? AuthService.GetUserEmail()?.Split('@')[0] ?? "";
+            _avatarUrl = profile?.AvatarUrl;
+        }
+        else
+        {
+            _displayName = "";
+            _avatarUrl = null;
+        }
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnAuthStateChanged -= OnAuthStateChanged;
+        ProfileService.OnProfileChanged -= OnProfileChanged;
+    }
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private MudTheme _theme = new MudTheme()
+    {
+        PaletteDark = new PaletteDark()
+        {
+            // Primary colors - Teal/Cyan (matching loading screen)
+            Primary = "#20818e",
+            PrimaryContrastText = "#ffffff",
+            Secondary = "#2dd4bf",
+            SecondaryContrastText = "#ffffff",
+            Tertiary = "#06b6d4",
+
+            // Status colors
+            Success = "#10b981",
+            Info = "#06b6d4",
+            Warning = "#f59e0b",
+            Error = "#ef4444",
+
+            // Background colors - Deep dark teal
+            Background = "#0a0e1a",
+            BackgroundGray = "#1a2332",
+            Surface = "#1a2332",
+
+            // App bar
+            AppbarBackground = "#1a2332",
+            AppbarText = "#f1f5f9",
+
+            // Drawer
+            DrawerBackground = "#1a2332",
+            DrawerText = "#f1f5f9",
+            DrawerIcon = "#94a3b8",
+
+            // Text colors
+            TextPrimary = "#f1f5f9",
+            TextSecondary = "#cbd5e1",
+            TextDisabled = "#64748b",
+
+            // Action colors
+            ActionDefault = "#cbd5e1",
+            ActionDisabled = "#475569",
+            ActionDisabledBackground = "#334155",
+
+            // Dividers and lines
+            Divider = "#334155",
+            DividerLight = "#475569",
+
+            // Table
+            TableLines = "#334155",
+            TableStriped = "#334155",
+            TableHover = "rgba(32, 129, 142, 0.2)",
+
+            // Overlays
+            OverlayDark = "rgba(10, 14, 26, 0.7)",
+            OverlayLight = "rgba(241, 245, 249, 0.1)",
+        }
+    };
+}

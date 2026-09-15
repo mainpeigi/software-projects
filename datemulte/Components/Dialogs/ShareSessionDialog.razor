@@ -1,0 +1,115 @@
+@using Datemulte_2.Services
+@using Datemulte_2.Models
+@using MudBlazor
+@inject SessionSharingService SharingService
+@inject LocalProfileService AuthService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<MudDialog>
+    <DialogContent>
+        <MudText Typo="Typo.h6" Class="mb-4">Share Session</MudText>
+        
+        <MudTextField @bind-Value="shareEmail" 
+                      Label="User Email" 
+                      Variant="Variant.Outlined"
+                      Margin="Margin.Dense"
+                      Class="mb-3"/>
+        
+        <MudSelect @bind-Value="selectedPermission" 
+                   Label="Permission Level" 
+                   Variant="Variant.Outlined"
+                   Margin="Margin.Dense"
+                   Class="mb-4">
+            <MudSelectItem Value="@SessionPermission.Viewer">Viewer (Read Only)</MudSelectItem>
+            <MudSelectItem Value="@SessionPermission.Commenter">Commenter (Can Add Comments)</MudSelectItem>
+            <MudSelectItem Value="@SessionPermission.Editor">Editor (Can Edit Data)</MudSelectItem>
+            <MudSelectItem Value="@SessionPermission.Admin">Admin (Full Control)</MudSelectItem>
+        </MudSelect>
+
+        @if (existingShares.Any())
+        {
+            <MudText Typo="Typo.subtitle2" Class="mb-2">Current Shares</MudText>
+            <MudList T="string" Dense="true">
+                @foreach (var share in existingShares)
+                {
+                    <MudListItem T="string">
+                        <div class="d-flex justify-space-between align-center">
+                            <div>
+                                <MudText Typo="Typo.body2">User ID: @share.SharedWithUserId</MudText>
+                                <MudText Typo="Typo.caption">@share.Permission</MudText>
+                            </div>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                         Size="Size.Small" 
+                                         Color="Color.Error"
+                                         OnClick="@(() => RemoveShare(share.Id))"/>
+                        </div>
+                    </MudListItem>
+                }
+            </MudList>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="ShareSession" Variant="Variant.Filled">Share</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    IMudDialogInstance MudDialog { get; set; } = null!;
+    [Parameter] public string sessionName { get; set; }
+    [Parameter] public Guid SessionId { get; set; }
+    [Parameter] public Guid OwnerId { get; set; }
+
+    private string shareEmail = "";
+    private SessionPermission selectedPermission = SessionPermission.Viewer;
+    private List<SessionShare> existingShares = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadExistingShares();
+    }
+
+    private async Task LoadExistingShares()
+    {
+        existingShares = await SharingService.GetSessionSharesAsync(SessionId, OwnerId);
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async Task ShareSession()
+    {
+        if (string.IsNullOrWhiteSpace(shareEmail))
+        {
+            Snackbar.Add("Please enter an email address", Severity.Warning);
+            return;
+        }
+
+        var (success, message) = await SharingService.ShareSessionByEmailAsync(SessionId, OwnerId, shareEmail, selectedPermission, sessionName);
+        if (success)
+        {
+            Snackbar.Add(message, Severity.Success);
+            await LoadExistingShares();
+            shareEmail = "";
+        }
+        else
+        {
+            Snackbar.Add($"Failed to share: {message}", Severity.Error);
+        }
+    }
+
+    private async Task RemoveShare(Guid shareId)
+    {
+        var (success, message) = await SharingService.RevokeAccessAsync(shareId, OwnerId);
+        if (success)
+        {
+            Snackbar.Add("Share removed successfully", Severity.Success);
+            await LoadExistingShares();
+        }
+        else
+        {
+            Snackbar.Add($"Failed to remove share: {message}", Severity.Error);
+        }
+    }
+}

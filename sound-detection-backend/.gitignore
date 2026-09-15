@@ -1,0 +1,12 @@
+node_modules/
+dist/
+data/
+.env
+.env.*
+*.log
+coverage/
+*.tsbuildinfo
+.npmrc
+*.local
+*.local.*
+.transfer*/
