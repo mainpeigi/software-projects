@@ -1,0 +1,18 @@
+{
+  "sourceProject": "ReqWire2",
+  "sourceRevision": "fde5e49fb6ced4dc3590096803c866195454c185",
+  "files": [
+    {
+      "path": "backend/src/ReqWire2.Application/Services/TemplateDiffCalculator.cs",
+      "sha256": "38fe46e06051488d2e6b7787f3ead11b02906690d168590f07fd1f9d5f4bd3c1"
+    },
+    {
+      "path": "backend/src/ReqWire2.Application/DTOs/TemplateSnapshot.cs",
+      "sha256": "01ef4d099d71634b8f382414866e54a5f251bbadd4d487515ed5f64577dd2f45"
+    },
+    {
+      "path": "backend/src/ReqWire2.Application/DTOs/TemplateDiffDto.cs",
+      "sha256": "5109aa693cc66feba252ca9b728566f974a93ec3c92dcacf1fa63273e157cb30"
+    }
+  ]
+}

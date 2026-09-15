@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "name": "School weather station",
+  "description": "Plan a classroom weather station.",
+  "categories": [
+    {
+      "key": "10000000-0000-4000-8000-000000000001",
+      "name": "Electronics",
+      "sortOrder": 0
+    }
+  ],
+  "components": [
+    {
+      "key": "20000000-0000-4000-8000-000000000001",
+      "categoryKey": "10000000-0000-4000-8000-000000000001",
+      "title": "Temperature measurement",
+      "description": "Measure the classroom temperature.",
+      "sortOrder": 0,
+      "isRequired": true,
+      "quantity": 1,
+      "partId": "30000000-0000-4000-8000-000000000001",
+      "part": {
+        "name": "Temperature sensor",
+        "mpn": "DEMO-TEMP-01",
+        "spn": null,
+        "specNames": [
+          "I2C",
+          "3.3 V"
+        ]
+      }
+    },
+    {
+      "key": "20000000-0000-4000-8000-000000000002",
+      "categoryKey": "10000000-0000-4000-8000-000000000001",
+      "title": "Display",
+      "description": null,
+      "sortOrder": 1,
+      "isRequired": false,
+      "quantity": 1,
+      "partId": null,
+      "part": null
+    }
+  ],
+  "checklistItems": [
+    {
+      "key": "40000000-0000-4000-8000-000000000001",
+      "title": "Verify measurements",
+      "description": "Compare against a reference thermometer.",
+      "sortOrder": 0,
+      "isRequired": true,
+      "dueDateOffsetDays": 5,
+      "defaultAssigneeRole": "Student",
+      "severity": "medium"
+    }
+  ],
+  "presetFlags": {
+    "PeerReviewRequired": false
+  }
+}

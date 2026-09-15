@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/SpecTrack.Core/SpecTrack.Core.csproj" />
+  <Project Path="src/SpecTrack.Api/SpecTrack.Api.csproj" />
+  <Project Path="tests/SpecTrack.Core.Tests/SpecTrack.Core.Tests.csproj" />
+  <Project Path="tests/SpecTrack.Api.Tests/SpecTrack.Api.Tests.csproj" />
+</Solution>

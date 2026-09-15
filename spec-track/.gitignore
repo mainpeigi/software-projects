@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/storage/
+publish/
+node_modules/
+.vs/
+.env*
+*.user
+*.zip
+*.log
+*.trx
+TestResults/

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "name": "School weather station",
+  "description": "Plan a classroom weather station with peer review and local data storage.",
+  "categories": [
+    {
+      "key": "10000000-0000-4000-8000-000000000001",
+      "name": "Sensors and electronics",
+      "sortOrder": 0
+    }
+  ],
+  "components": [
+    {
+      "key": "20000000-0000-4000-8000-000000000001",
+      "categoryKey": "10000000-0000-4000-8000-000000000001",
+      "title": "Temperature measurement",
+      "description": "Measure the classroom temperature.",
+      "sortOrder": 0,
+      "isRequired": true,
+      "quantity": 2,
+      "partId": "30000000-0000-4000-8000-000000000001",
+      "part": {
+        "name": "Calibrated temperature sensor",
+        "mpn": "DEMO-TEMP-01",
+        "spn": null,
+        "specNames": [
+          "I2C",
+          "3.3 V",
+          "Accuracy +/- 0.5 C"
+        ]
+      }
+    },
+    {
+      "key": "20000000-0000-4000-8000-000000000003",
+      "categoryKey": "10000000-0000-4000-8000-000000000001",
+      "title": "Local data storage",
+      "description": "Save measurements for the experiment report.",
+      "sortOrder": 1,
+      "isRequired": true,
+      "quantity": 1,
+      "partId": null,
+      "part": null
+    }
+  ],
+  "checklistItems": [
+    {
+      "key": "40000000-0000-4000-8000-000000000001",
+      "title": "Verify measurements",
+      "description": "Compare against a reference thermometer.",
+      "sortOrder": 0,
+      "isRequired": true,
+      "dueDateOffsetDays": 3,
+      "defaultAssigneeRole": "Student",
+      "severity": "high"
+    },
+    {
+      "key": "40000000-0000-4000-8000-000000000002",
+      "title": "Document the experiment",
+      "description": null,
+      "sortOrder": 1,
+      "isRequired": true,
+      "dueDateOffsetDays": 7,
+      "defaultAssigneeRole": "Team",
+      "severity": "medium"
+    }
+  ],
+  "presetFlags": {
+    "PeerReviewRequired": true
+  }
+}
